@@ -24,50 +24,67 @@ public class AudioManager : MonoBehaviour
     public AudioSource backgroundAmbience;    
     public AudioSource shipHum;    
     public AudioSource doorOpen;    
-    //public AudioSource footsteps;    
-    //public AudioSource randomChatter;        
+    public AudioSource footsteps;    
+    public AudioSource randomChatter;        
     public AudioSource airCon;
+    public AudioSource radar;
+    public AudioSource waterPipe;
 
-    //public float footstepsInterval = 12f;
+
+
+    //randomly played sounds (every bewteen X and Y seconds)
+    public float footstepsMinInterval = 12f;
+    public float footstepsMaxInterval = 12f;
     public float doorOpenMinInterval = 15f;
     public float doorOpenMaxInterval = 30f;
-    public float airConInterval = 35f;
+    public float chatterMinInterval = 15f;
+    public float chatterMaxInterval = 30f;
 
-    public float noiseReductionDelay = 20f;
+
+    //Periodically played sounds (every X seconds)
+    public float airConInterval = 25f;
+    public float radarInterval = 15f;
+    public float waterPipeInterval = 40f;
+
+
+    //Lowering overall volume
+    public float noiseReductionDelay = 30f; //how long before it starts to reduce sound
     public float decreasePercentage = 0.50f; // The total percentage by which to decrease the volume
-    public float decreaseDuration = 20f;  // The duration over which to decrease the volume
+    public float decreaseDuration = 300f;  // The duration over which to decrease the volume
 
 
     void Start()
     {
-        ///start playing background looping sounds 
+        //start playing background looping sounds 
         backgroundAmbience.loop = true;
         backgroundAmbience.Play();
 
         shipHum.loop = true;
         shipHum.Play();
 
-        ///start corroutines
+        ///start playing periodical/random sounds
         StartCoroutine(PlayDoorOpening());
-        //StartCoroutine(PlayFootsteps());
+        StartCoroutine(PlayFootsteps());
+        StartCoroutine(PlayRandomChatter());
+
         StartCoroutine(PlayAirCon());
+        StartCoroutine(PlayRadar());
+        StartCoroutine(PlayWaterPipe());
+
+
 
 
         StartCoroutine(manageAudioVolumes());
-
-
-
-
 
 
     }
 
     void Update()
     {
-        /// Adjust the volume of sounds here (e.g., using Mathf.Lerp)
-        
-        //randomChatter.volume = Mathf.Lerp(0.2f, 0.8f, Mathf.PingPong(Time.time, 1f));
-        shipHum.volume = Mathf.Lerp(0.2f, 0.8f, Mathf.PingPong(Time.time, 1f));
+        //Adjust the volume of sounds here (e.g., using Mathf.Lerp)
+
+        //randomChatter.volume = Mathf.Lerp(0f, 0.8f, Mathf.PingPong(Time.time, 1f));
+        ///shipHum.volume = Mathf.Lerp(0.2f, 0.8f, Mathf.PingPong(Time.time, 1f));
 
     }
 
@@ -83,18 +100,34 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    /*
+    IEnumerator PlayRandomChatter()
+    {
+        while (true)
+        {
+            float interval = Random.Range(chatterMinInterval, chatterMaxInterval);
+            yield return new WaitForSeconds(interval);
+            doorOpen.Play();
+
+            float timePlay = Random.Range(3, 6);
+            yield return new WaitForSeconds(timePlay);
+            doorOpen.Stop();
+
+
+        }
+    }
+
+
     IEnumerator PlayFootsteps()
     {
         while (true)
         {
-            nextFootstepsTime = footstepsInterval;
+            float interval = Random.Range(footstepsMinInterval, footstepsMaxInterval);
 
-            yield return new WaitForSeconds(footstepsInterval);
+            yield return new WaitForSeconds(interval);
             footsteps.Play();
         }
     }
-    */
+    
 
     IEnumerator PlayAirCon()
     {
@@ -102,13 +135,39 @@ public class AudioManager : MonoBehaviour
         {
             yield return new WaitForSeconds(airConInterval);            
             airCon.Play();
+
+            yield return new WaitForSeconds(10.0f);
+            airCon.Stop();
+
+        }
+    }
+
+    IEnumerator PlayWaterPipe()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(waterPipeInterval);
+            waterPipe.Play();
+
+            float timePlay = Random.Range(4, 8);
+            yield return new WaitForSeconds(timePlay);
+            doorOpen.Stop();
+        }
+    }
+
+    IEnumerator PlayRadar()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(radarInterval);
+            radar.Play();
         }
     }
 
     IEnumerator DecreaseVolumeOverTime(AudioSource audioSource)
     {
         float startVolume = audioSource.volume;
-        float targetVolume = startVolume * (1.0f - decreasePercentage); // Calculate the target volume
+        float targetVolume = startVolume * (1.0f - decreasePercentage);
 
         float startTime = Time.time;
 
@@ -129,7 +188,14 @@ public class AudioManager : MonoBehaviour
         StartCoroutine(DecreaseVolumeOverTime(backgroundAmbience));
         StartCoroutine(DecreaseVolumeOverTime(shipHum));
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
+        StartCoroutine(DecreaseVolumeOverTime(footsteps));
+        StartCoroutine(DecreaseVolumeOverTime(randomChatter));
         StartCoroutine(DecreaseVolumeOverTime(airCon));
+        StartCoroutine(DecreaseVolumeOverTime(radar));
+        StartCoroutine(DecreaseVolumeOverTime(waterPipe));
+
+
+
 
 
     }

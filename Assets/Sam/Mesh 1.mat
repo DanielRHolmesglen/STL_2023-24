@@ -66,17 +66,17 @@ Material:
     m_Floats:
     - _AnimOn: 1
     - _BumpScale: 1
-    - _Colorize: 0.586
+    - _Colorize: 0.934
     - _Culling: 0
     - _Cutoff: 0.5
-    - _D1Distort: 2
-    - _D1I: 1.073
-    - _D1Scale: 1.26
-    - _D1Speed: 1.64
+    - _D1Distort: 0.75
+    - _D1I: 1.065
+    - _D1Scale: 1.06
+    - _D1Speed: 1.5
     - _D2Distort: 8.45
-    - _D2I: 0.5
-    - _D2Scale: 10.02
-    - _D2Speed: 3.88
+    - _D2I: 0.791
+    - _D2Scale: 16.82
+    - _D2Speed: 12.45
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
@@ -93,6 +93,6 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 8, g: 8, b: 8, a: 3}
+    - _Color: {r: 18.164822, g: 0, b: 0.7608303, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Rotation: {r: 0, g: 0, b: 0, a: 0}
+    - _Rotation: {r: 0, g: 0, b: 137.38, a: 0}

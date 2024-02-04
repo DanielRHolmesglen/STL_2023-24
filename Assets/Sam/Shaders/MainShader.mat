@@ -57,7 +57,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _TextureImage:
         m_Texture: {fileID: 2800000, guid: 7e36f2ea06207da4d8c25ff499602401, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Scale: {x: 1, y: 0.9}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
@@ -78,7 +78,7 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.92941177, g: 0.1409261, b: 0.08235295, a: 1}
+    - _Color: {r: 0.8019559, g: 0.8307337, b: 0.120938525, a: 1}
     - _ColorToEdit: {r: 1, g: 0.23137257, b: 0, a: 1}
     - _ColourToEdit: {r: 1, g: 0.23032936, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
