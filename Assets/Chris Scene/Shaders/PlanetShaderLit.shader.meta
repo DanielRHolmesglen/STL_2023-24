@@ -3,7 +3,9 @@ guid: 9e2e920d8050a164fa8baccc50f5ac37
 ShaderImporter:
   externalObjects: {}
   defaultTextures:
-  - _Snow: {fileID: 2800000, guid: 649fcca1a6b895d4da87912f0c450f27, type: 3}
+  - _NormalMap1: {instanceID: 0}
+  - _Snow: {instanceID: 0}
+  - _NormalMap2: {instanceID: 0}
   nonModifiableTextures: []
   userData: 
   assetBundleName: 
