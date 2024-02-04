@@ -8,10 +8,10 @@ public class ShaderController : MonoBehaviour
     public Material materialToControl;
     ///[Range(0.0f, 1.0f)] public float dimness = 0.5f;
 
-    public Color targetColor = Color.yellow; // Specify the target color in the Inspector
-    public float colorChangeDuration = 10.0f; // Set the duration in the Inspector
+    public Color targetColor = Color.yellow; 
+    public float colorChangeDuration = 10.0f; 
     public Color dimColor = Color.black;
-    public float dimColorDuration = 10.0f; // Set the duration in the Inspector
+    public float dimColorDuration = 10.0f; 
 
     public float speed = 1.0f;
     public float targetSpeed = 2.0f;
@@ -74,11 +74,11 @@ public class ShaderController : MonoBehaviour
         {
             float t = (Time.time - startTime) / duration;
             float lerpedSpeed = Mathf.Lerp(startSpeed, targetSpeed, t);
-            materialToControl.SetFloat("_speed", lerpedSpeed);
+            materialToControl.SetFloat("_Speed", lerpedSpeed);
             yield return null;
         }
 
-        materialToControl.SetFloat("_speed", targetSpeed);
+        materialToControl.SetFloat("_Speed", targetSpeed);
     }
 
     /*
