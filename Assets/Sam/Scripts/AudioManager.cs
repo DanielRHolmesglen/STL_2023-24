@@ -4,11 +4,28 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public AudioSource backgroundAmbience;
-    public AudioSource shipHum;
-    public AudioSource doorOpen;
-    //public AudioSource footsteps;
-    //public AudioSource randomChatter;
+    //below is how we can add similar sounds using the doorOpen as an example randomized, first we add more than one "public AudioSource doorOpen;", then make method and call that method e.g. where doorOpen.Play(); is, instead we call the below, by stating doorOpens(); and inside that function it does the randomizing and the .Play
+    //I don't know how but this can be done in a [Serializedfield] probably
+
+    //private void doorOpens()
+    //{
+    //int rand = Random.Range (0, 4);
+    //if (rand == 0)
+    // {
+    //  doorOpen.Play();
+    // }
+    //   if (rand == 1)
+    //   {
+    //    doorOpen1.Play();
+    //   }
+    //}
+
+
+    public AudioSource backgroundAmbience;    
+    public AudioSource shipHum;    
+    public AudioSource doorOpen;    
+    //public AudioSource footsteps;    
+    //public AudioSource randomChatter;        
     public AudioSource airCon;
 
     //public float footstepsInterval = 12f;
@@ -83,7 +100,7 @@ public class AudioManager : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(airConInterval);
+            yield return new WaitForSeconds(airConInterval);            
             airCon.Play();
         }
     }

@@ -7,10 +7,10 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Background.Material
-  m_Shader: {fileID: 4800000, guid: 617d520a46b1b40418be51b81ba99365, type: 3}
+  m_Name: PlanetMaterial
+  m_Shader: {fileID: 4800000, guid: 9e2e920d8050a164fa8baccc50f5ac37, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 4
+  m_LightmapFlags: 0
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -20,6 +20,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CloudMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -39,12 +43,32 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _HeightMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LightMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap1:
+        m_Texture: {fileID: 2800000, guid: 8e4e75197c250c64abac25b280239743, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalMap2:
+        m_Texture: {fileID: 2800000, guid: b802b456ddb280f44a035f80e4eeca48, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -55,30 +79,50 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _TextureImage:
-        m_Texture: {fileID: 2800000, guid: 7e36f2ea06207da4d8c25ff499602401, type: 3}
+    - _Snow:
+        m_Texture: {fileID: 2800000, guid: 649fcca1a6b895d4da87912f0c450f27, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TextureMap:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
+    - _CloudPanSpeed: 0
+    - _ColorSeep: 7
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _FreezeEffectnormal: 7
+    - _Gloss: 0.8
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _HeightMapIntensity: 5
+    - _IceFresnal: 0
+    - _Invisibility: 0
+    - _LightIntensity: 0
+    - _LocalGlobal: 0
     - _Metallic: 0
     - _Mode: 0
+    - _NormalMapIntensity: 1
     - _OcclusionStrength: 1
+    - _Opacity: 0
     - _Parallax: 0.02
+    - _PlanetDarkness: -1
     - _SmoothnessTextureChannel: 0
+    - _SnowSlider: -1
     - _SpecularHighlights: 1
-    - _Speed: -3
     - _SrcBlend: 1
+    - _Transparency: 0
     - _UVSec: 0
+    - _WhiteAdded: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.8753064, g: 0.780875, b: 0.31598198, a: 0.9261541}
-    - _ColorToEdit: {r: 1, g: 0.23137257, b: 0, a: 1}
-    - _ColourToEdit: {r: 1, g: 0.23032936, b: 0, a: 1}
+    - _BaseColor: {r: 0.8784314, g: 0.0039215535, b: 0.02087464, a: 1}
+    - _CloudColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _LightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TextureColor: {r: 1, g: 1, b: 1, a: 1}
