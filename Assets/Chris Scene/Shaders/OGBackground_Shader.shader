@@ -26,7 +26,6 @@ Shader "Shader Forge/Background_Shader" {
             #define UNITY_PASS_FORWARDBASE
             #include "UnityCG.cginc"
             #pragma multi_compile_fwdbase_fullshadows
-            #pragma only_renderers d3d9 d3d11 glcore gles 
             #pragma target 3.0
             uniform sampler2D _TextureImage; uniform float4 _TextureImage_ST;
             uniform float _Speed;
