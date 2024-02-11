@@ -35,6 +35,7 @@ Shader "Shader Forge/Stars" {
             #include "UnityPBSLighting.cginc"
             #include "UnityStandardBRDF.cginc"
             #pragma multi_compile_fwdbase_fullshadows
+            #pragma only_renderers d3d9 d3d11 glcore gles 
             #pragma target 3.0
             uniform sampler2D _StarsTextureRGB; uniform float4 _StarsTextureRGB_ST;
             uniform float _Speed1;
@@ -109,6 +110,7 @@ Shader "Shader Forge/Stars" {
             #include "UnityStandardBRDF.cginc"
             #pragma fragmentoption ARB_precision_hint_fastest
             #pragma multi_compile_shadowcaster
+            #pragma only_renderers d3d9 d3d11 glcore gles 
             #pragma target 3.0
             uniform sampler2D _StarsTextureRGB; uniform float4 _StarsTextureRGB_ST;
             uniform float _Speed1;
