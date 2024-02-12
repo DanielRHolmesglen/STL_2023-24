@@ -33,7 +33,6 @@ Shader "Shader Forge/RingPulse" {
             #define UNITY_PASS_FORWARDBASE
             #include "UnityCG.cginc"
             #pragma multi_compile_fwdbase
-            #pragma only_renderers d3d9 d3d11 glcore gles 
             #pragma target 3.0
             uniform float _Radius;
             uniform float _Thickness;

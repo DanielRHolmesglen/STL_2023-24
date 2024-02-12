@@ -56,19 +56,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _StarsTextureRGB:
-        m_Texture: {fileID: 2800000, guid: 6aebc3c510671f54aaa06b142d195356, type: 3}
-        m_Scale: {x: 0.5, y: 0.5}
-        m_Offset: {x: 0, y: 0}
+        m_Texture: {fileID: 2800000, guid: dda68065aae7d3a4a993e33daa8a37e6, type: 3}
+        m_Scale: {x: -1.27, y: 0.7}
+        m_Offset: {x: 0.59, y: 0}
     - _node_1093:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
-    - _CameraOffset: 6
+    - _CameraOffset: 7.66
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Distort: 0.05
+    - _Distort: 0
     - _DstBlend: 0
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -80,16 +80,16 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _Speed: 0
-    - _Speed1: 0
-    - _Speed2: 0
-    - _SpeedDistort: -2
+    - _Speed1: 3
+    - _Speed2: 3
+    - _SpeedDistort: 0
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 0}
-    - _Color1: {r: 0.7264444, g: 0.0994081, b: 0.11780686, a: 1}
-    - _Color2: {r: 0.73588735, g: 0.13539776, b: 0.3734943, a: 1}
+    - _Color1: {r: 0.7830189, g: 0.1485628, b: 0.114498034, a: 1}
+    - _Color2: {r: 0.7372549, g: 0.1137255, b: 0.32570598, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _StarColor1: {r: 0.8113208, g: 0.4016938, b: 0.3099858, a: 1}
     - _StarColor2: {r: 0.92941177, g: 0.8265643, b: 0.427451, a: 1}
