@@ -3,7 +3,7 @@ guid: f5977a99bd2d80144af42efaa8e86dbe
 ShaderImporter:
   externalObjects: {}
   defaultTextures:
-  - _StarsTextureRGB: {fileID: 2800000, guid: 6aebc3c510671f54aaa06b142d195356, type: 3}
+  - _StarsTextureRGB: {fileID: 2800000, guid: e44c95ed1564c4d438986b8e0e0458a1, type: 3}
   nonModifiableTextures: []
   userData: 
   assetBundleName: 
