@@ -4,47 +4,54 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    //below is how we can add similar sounds using the doorOpen as an example randomized, first we add more than one "public AudioSource doorOpen;", then make method and call that method e.g. where doorOpen.Play(); is, instead we call the below, by stating doorOpens(); and inside that function it does the randomizing and the .Play
-    //I don't know how but this can be done in a [Serializedfield] probably
+    
 
-    //private void doorOpens()
-    //{
-    //int rand = Random.Range (0, 4);
-    //if (rand == 0)
-    // {
-    //  doorOpen.Play();
-    // }
-    //   if (rand == 1)
-    //   {
-    //    doorOpen1.Play();
-    //   }
-    //}
-
-
+    //audio sources
     public AudioSource backgroundAmbience;    
-    public AudioSource shipHum;    
+    public AudioSource bgMusic;
+    public AudioSource shipPulse;
+    
     public AudioSource doorOpen;    
     public AudioSource footsteps;    
-    public AudioSource randomChatter;        
-    public AudioSource airCon;
+    public AudioSource chatter;        
+    public AudioSource lifeSupport;
     public AudioSource radar;
-    public AudioSource waterPipe;
+    public AudioSource music;
+    public AudioSource shower;
 
+
+    //arrays of audio clips if a source can have more than 1 sound
+    public AudioClip[] doorOpenSounds;
+    public AudioClip[] footstepsSounds;
+    public AudioClip[] chatterSounds;
+    public AudioClip[] lifeSupportSounds;
+    public AudioClip[] musicSounds;
 
 
     //randomly played sounds (every bewteen X and Y seconds)
-    public float footstepsMinInterval = 12f;
-    public float footstepsMaxInterval = 12f;
-    public float doorOpenMinInterval = 15f;
+    public float footstepsMinInterval = 15f;
+    public float footstepsMaxInterval = 25f;
+    public float doorOpenMinInterval = 20f;
     public float doorOpenMaxInterval = 30f;
-    public float chatterMinInterval = 15f;
-    public float chatterMaxInterval = 30f;
+    public float chatterMinInterval = 30f;
+    public float chatterMaxInterval = 40f;
+    public float musicMinInterval = 30f;
+    public float musicMaxInterval = 45f;
+    public float showerMinInterval = 40f;
+    public float showerMaxInterval = 60f;
 
 
     //Periodically played sounds (every X seconds)
-    public float airConInterval = 25f;
-    public float radarInterval = 15f;
-    public float waterPipeInterval = 40f;
+    public float lifeSupportInterval = 20f;
+    public float radarInterval = 35f;
+    ///public float shipPulseInterval = 40f;
+    
+
+    //some specific volume adjustments
+    public float shipPulseVolumePercentage = 0.5f; // Target volume percentage (0 to 1)
+    public float shipPulseChangeSpeed = 0.5f; // Volume change speed per second
+
+
 
 
     //Lowering overall volume
@@ -59,21 +66,30 @@ public class AudioManager : MonoBehaviour
         backgroundAmbience.loop = true;
         backgroundAmbience.Play();
 
-        shipHum.loop = true;
-        shipHum.Play();
+        bgMusic.loop = true;
+        bgMusic.Play();
 
-        ///start playing periodical/random sounds
+        shipPulse.loop = true;
+        shipPulse.Play();
+
+
+        //start playing periodical/random sounds
         StartCoroutine(PlayDoorOpening());
         StartCoroutine(PlayFootsteps());
         StartCoroutine(PlayRandomChatter());
 
-        StartCoroutine(PlayAirCon());
+        StartCoroutine(PlayLifeSupport());
         StartCoroutine(PlayRadar());
-        StartCoroutine(PlayWaterPipe());
+        ///StartCoroutine(PlayshipPulse());
+        StartCoroutine(PlayMusic());
+        StartCoroutine(PlayShower());
 
 
 
+        StartCoroutine(ContinuallyAdjustVolume());
 
+
+        //start gradually decreasing volumes
         StartCoroutine(manageAudioVolumes());
 
 
@@ -83,19 +99,63 @@ public class AudioManager : MonoBehaviour
     {
         //Adjust the volume of sounds here (e.g., using Mathf.Lerp)
 
-        //randomChatter.volume = Mathf.Lerp(0f, 0.8f, Mathf.PingPong(Time.time, 1f));
-        ///shipHum.volume = Mathf.Lerp(0.2f, 0.8f, Mathf.PingPong(Time.time, 1f));
+        ///randomChatter.volume = Mathf.Lerp(0f, 0.8f, Mathf.PingPong(Time.time, 1f));
+        bgMusic.volume = Mathf.Lerp(0.2f, 0.6f, Mathf.PingPong(Time.time, 1f));
+        shipPulse.volume = Mathf.Lerp(0f, 0.5f, Mathf.PingPong(Time.time, 1f));
+
 
     }
+
+
+    IEnumerator ContinuallyAdjustVolume()
+    {
+        // Get the starting volume of the audio source
+        float startVolume = shipPulse.volume;
+
+        // Calculate the target volume
+        float targetVolume = startVolume * shipPulseVolumePercentage;
+
+        while (true)
+        {
+            // Calculate the change in volume per frame
+            float volumeChangePerFrame = shipPulseChangeSpeed * Time.deltaTime;
+
+            // Determine whether to increase or decrease volume based on the target
+            if (shipPulse.volume < targetVolume)
+            {
+                // Increase volume gradually
+                shipPulse.volume += volumeChangePerFrame;
+            }
+            else if (shipPulse.volume > targetVolume)
+            {
+                // Decrease volume gradually
+                shipPulse.volume -= volumeChangePerFrame;
+            }
+
+            // Clamp volume to ensure it stays within the valid range (0 to 1)
+            shipPulse.volume = Mathf.Clamp(shipPulse.volume, 0f, 1f);
+
+            // Wait for the next frame
+            yield return null;
+        }
+    }
+
+    ///---------------------------------------
+
 
     IEnumerator PlayDoorOpening()
     {
         while (true)
         {
             float interval = Random.Range(doorOpenMinInterval, doorOpenMaxInterval);
-
             yield return new WaitForSeconds(interval);
 
+            // Select a random sound from the array
+            int randomIndex = Random.Range(0, doorOpenSounds.Length);
+            AudioClip randomSound = doorOpenSounds[randomIndex];
+
+            // Play the selected random sound
+            doorOpen.clip = randomSound;
             doorOpen.Play();
         }
     }
@@ -106,11 +166,19 @@ public class AudioManager : MonoBehaviour
         {
             float interval = Random.Range(chatterMinInterval, chatterMaxInterval);
             yield return new WaitForSeconds(interval);
-            doorOpen.Play();
 
+            // Select a random sound from the array
+            int randomIndex = Random.Range(0, chatterSounds.Length);
+            AudioClip randomSound = chatterSounds[randomIndex];
+
+            // Play the selected random sound
+            chatter.clip = randomSound;
+            chatter.Play();
+
+            //stops the whole sound being played (many of which are 20+ seconds long)
             float timePlay = Random.Range(3, 6);
             yield return new WaitForSeconds(timePlay);
-            doorOpen.Stop();
+            chatter.Stop();
 
 
         }
@@ -122,38 +190,48 @@ public class AudioManager : MonoBehaviour
         while (true)
         {
             float interval = Random.Range(footstepsMinInterval, footstepsMaxInterval);
-
             yield return new WaitForSeconds(interval);
+
+
+            // Select a random sound from the array
+            int randomIndex = Random.Range(0, footstepsSounds.Length);
+            AudioClip randomSound = footstepsSounds[randomIndex];
+
+            // Play the selected random sound
+            footsteps.clip = randomSound;
             footsteps.Play();
+
+            float timePlay = Random.Range(3, 4);
+            yield return new WaitForSeconds(timePlay);
+            footsteps.Stop();
+
         }
     }
     
 
-    IEnumerator PlayAirCon()
+    IEnumerator PlayLifeSupport()
     {
         while (true)
         {
-            yield return new WaitForSeconds(airConInterval);            
-            airCon.Play();
+        
+            yield return new WaitForSeconds(lifeSupportInterval);
 
-            yield return new WaitForSeconds(10.0f);
-            airCon.Stop();
+            // Select a random sound from the array
+            int randomIndex = Random.Range(0, lifeSupportSounds.Length);
+            AudioClip randomSound = lifeSupportSounds[randomIndex];
 
-        }
-    }
+            // Play the selected random sound
+            lifeSupport.clip = randomSound;
+            lifeSupport.Play();
 
-    IEnumerator PlayWaterPipe()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(waterPipeInterval);
-            waterPipe.Play();
-
-            float timePlay = Random.Range(4, 8);
+            //stops the whole sound being played (many of which are 20+ seconds long)
+            float timePlay = Random.Range(8, 12);
             yield return new WaitForSeconds(timePlay);
-            doorOpen.Stop();
+            lifeSupport.Stop();
+
         }
     }
+
 
     IEnumerator PlayRadar()
     {
@@ -163,6 +241,49 @@ public class AudioManager : MonoBehaviour
             radar.Play();
         }
     }
+
+
+    IEnumerator PlayMusic()
+    {
+        while (true)
+        {
+            float interval = Random.Range(musicMinInterval, musicMaxInterval);
+            yield return new WaitForSeconds(interval);
+
+            // Select a random sound from the array
+            int randomIndex = Random.Range(0, musicSounds.Length);
+            AudioClip randomSound = musicSounds[randomIndex];
+
+            // Play the selected random sound
+            music.clip = randomSound;
+            music.Play();
+
+            //stops the whole sound being played (many of which are 60+ seconds long)
+            float timePlay = Random.Range(20, 30);
+            yield return new WaitForSeconds(timePlay);
+            music.Stop();
+
+        }
+    }
+
+    IEnumerator PlayShower()
+    {
+        while (true)
+        {
+            float interval = Random.Range(showerMinInterval, showerMaxInterval);
+            yield return new WaitForSeconds(interval);
+
+            shower.Play();
+
+            //stops the whole sound being played (many of which are 60+ seconds long)
+            float timePlay = Random.Range(15, 25);
+            yield return new WaitForSeconds(timePlay);
+            music.Stop();
+
+        }
+    }
+
+ ///---------------------------------------------------
 
     IEnumerator DecreaseVolumeOverTime(AudioSource audioSource)
     {
@@ -181,21 +302,22 @@ public class AudioManager : MonoBehaviour
         audioSource.volume = targetVolume;
     }
 
+
     private IEnumerator manageAudioVolumes()
     {
         yield return new WaitForSeconds(noiseReductionDelay);
 
         StartCoroutine(DecreaseVolumeOverTime(backgroundAmbience));
-        StartCoroutine(DecreaseVolumeOverTime(shipHum));
+        StartCoroutine(DecreaseVolumeOverTime(bgMusic));
+        StartCoroutine(DecreaseVolumeOverTime(shipPulse));
+
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
         StartCoroutine(DecreaseVolumeOverTime(footsteps));
-        StartCoroutine(DecreaseVolumeOverTime(randomChatter));
-        StartCoroutine(DecreaseVolumeOverTime(airCon));
+        StartCoroutine(DecreaseVolumeOverTime(chatter));
+        StartCoroutine(DecreaseVolumeOverTime(lifeSupport));
         StartCoroutine(DecreaseVolumeOverTime(radar));
-        StartCoroutine(DecreaseVolumeOverTime(waterPipe));
-
-
-
+        StartCoroutine(DecreaseVolumeOverTime(music));
+        StartCoroutine(DecreaseVolumeOverTime(shower));
 
 
     }
