@@ -4,11 +4,19 @@ using UnityEngine;
 
 public class ShaderController : MonoBehaviour
 {
-
     public Material material;
-    ///[Range(0.0f, 1.0f)] public float dimness = 0.5f;
-    
-    //used to stop this shader and start the next one
+
+    public Color[] targetColors; // Array of target colors
+    private int currentIndex = 0; // Index of the current target color
+    ///public float changeInterval = 5.0f; // Time interval between color changes
+    public float colorChangeDuration = 60.0f; // Duration of each color change
+
+    public float targetSpeed = 5.0f;
+    public float speedChangeDuration = 180f;
+
+
+    /*
+    //used to inactivate this shader and start the next one
     public GameObject currentShaderObject;
     public GameObject nextShaderObject;
     public float handOverDelay = 90;
@@ -28,12 +36,14 @@ public class ShaderController : MonoBehaviour
     ///public float speedReduction = 0.70f;
     ///public float speedReductionDuration = 3.0f;
     
+
     private float startSpeed;
     private float currentSpeed;
     private Color startColor;
 
     private float time = 0.0f;
 
+    
     public void Awake()
     {
         //get initial values
@@ -57,7 +67,56 @@ public class ShaderController : MonoBehaviour
         
         material.SetFloat("_Time", time);
     }
+    */
 
+    void Start()
+    {
+        // Start the ColorChangeManager coroutine
+        StartCoroutine(ColorChangeManager());
+
+        StartCoroutine(ChangeSpeedToTarget(targetSpeed, speedChangeDuration));
+
+    }
+
+
+    IEnumerator ColorChangeManager()
+    {
+        while (true)
+        {
+            // Get the current target color from the array
+            Color currentTargetColor = targetColors[currentIndex];
+
+            // Start the ChangeColorOverTime coroutine with the current target color
+            StartCoroutine(ChangeColorOverTime(currentTargetColor, colorChangeDuration));
+
+            // Increment the current index, wrapping around to the start if needed
+            currentIndex = (currentIndex + 1) % targetColors.Length;
+
+            // Wait for the specified change interval before starting the next color change
+            yield return new WaitForSeconds(colorChangeDuration);
+        }
+    }
+
+    IEnumerator ChangeColorOverTime(Color targetColor, float duration)
+    {
+        float startTime = Time.time;
+        Color startColor = GetComponent<Renderer>().material.GetColor("_Color");
+
+        while (Time.time - startTime < duration)
+        {
+            float t = (Time.time - startTime) / duration;
+            Color lerpedColor = Color.Lerp(startColor, targetColor, t);
+            GetComponent<Renderer>().material.SetColor("_Color", lerpedColor);
+            yield return null;
+        }
+
+        // Ensure the final color is set correctly
+        GetComponent<Renderer>().material.SetColor("_Color", targetColor);
+    }
+
+
+    /*
+    
     IEnumerator ChangeColorOverTime(Color targetColor, float duration)
     {
         float startTime = Time.time;
@@ -72,40 +131,39 @@ public class ShaderController : MonoBehaviour
 
         material.SetColor("_Color", targetColor);
 
-        // Update startColor for the next iteration or use case
-        startColor = targetColor;
-
-        // Start this coroutine again with different values after finishing this one
-        StartCoroutine(ChangeColorOverTime(secondTargetColor, colorChangeDuration));
 
     }
+    */
 
-    IEnumerator ChangeSpeedToTarget(float targetSpeed)
+    IEnumerator ChangeSpeedToTarget(float targetSpeed, float duration)
     {
-        ///float startSpeed = material.GetFloat("_Speed");
-        float currentSpeed = startSpeed;
+        float startSpeed = material.GetFloat("_Speed"); //shaders speed value
+        float startTime = Time.time;
 
-        while (currentSpeed > targetSpeed)
+        Debug.Log("Starting speed: " + startSpeed);
+        Debug.Log("Target speed: " + targetSpeed);
+
+        while (Time.time - startTime < duration)
         {
-            // Calculate the percentage of remaining speed to reach the target speed
-            float t = (currentSpeed - targetSpeed) / (startSpeed - targetSpeed);
+            float t = (Time.time - startTime) / duration; // Calculate the percentage of time elapsed
 
-            // Calculate the new speed value with the reduction
-            float lerpedSpeed = Mathf.Lerp(startSpeed, targetSpeed, t);
+            float lerpedSpeed = Mathf.Lerp(startSpeed, targetSpeed, t); // Calculate the new speed value with the lerp
 
-            // Set the shader property
-            material.SetFloat("_Speed", lerpedSpeed);
+            material.SetFloat("_Speed", lerpedSpeed);    // Set new shader speed value
+            Debug.Log("Calculated Lerp speed: " + lerpedSpeed);
+            Debug.Log("Current shader speed: " + material.GetFloat("_Speed"));
 
-            // Reduce current speed for the next iteration
-            currentSpeed = lerpedSpeed;
 
             yield return null;
         }
 
-        // Ensure the final speed is exactly the target speed
-        material.SetFloat("_Speed", targetSpeed);
+        material.SetFloat("_Speed", targetSpeed); // Making sure final speed matches the target
+
+        Debug.Log("Final speed: " + targetSpeed);
+
     }
 
+    /*
     IEnumerator ShaderHandover()
     {
         // Wait for the specified delay time
@@ -129,7 +187,7 @@ public class ShaderController : MonoBehaviour
             currentShaderObject.SetActive(false);
         }
     }
-
+    */
 
     /*
     IEnumerator ChangeSpeedOverTime(float targetSpeed, float duration)
