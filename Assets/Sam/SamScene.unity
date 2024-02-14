@@ -230,7 +230,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!136 &76915446
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -573,7 +573,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142216559}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 8af30ec2bb2b8bd4aa0567039a1c619a, type: 3}
@@ -669,7 +669,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142216559}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 89b42ee6e7bfc9d42be104b61273005e, type: 3}
@@ -770,8 +770,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: ab3eeb46ca3e1b748b6a5fecdc9bd126, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.376
-  m_Pitch: 1
+  m_Volume: 0.1
+  m_Pitch: 0.8
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -866,7 +866,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 617068b6144ec154995474de682624bc, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.409
+  m_Volume: 0.4
   m_Pitch: 0.89
   Loop: 0
   Mute: 0
@@ -965,47 +965,15 @@ MonoBehaviour:
   backgroundAmbience: {fileID: 142216563}
   bgMusic: {fileID: 142216562}
   shipPulse: {fileID: 142216566}
-  doorOpen: {fileID: 142216561}
-  footsteps: {fileID: 142216569}
-  chatter: {fileID: 142216567}
-  lifeSupport: {fileID: 142216560}
-  radar: {fileID: 142216568}
-  music: {fileID: 142216571}
-  shower: {fileID: 142216570}
-  doorOpenSounds:
-  - {fileID: 8300000, guid: 54f21bad701a09c46bb7d112a3ee0bbc, type: 3}
-  - {fileID: 8300000, guid: 89b42ee6e7bfc9d42be104b61273005e, type: 3}
-  footstepsSounds:
-  - {fileID: 8300000, guid: 82ae01e4a81489340bd3dc763930980f, type: 3}
-  - {fileID: 8300000, guid: 651730eeada7fdc4492f28aa230bffe5, type: 3}
-  - {fileID: 8300000, guid: f96c9b99872cbec40bd83b440c77f869, type: 3}
-  chatterSounds:
-  - {fileID: 8300000, guid: 6604688be583d424a9ced2dc28335dd4, type: 3}
-  - {fileID: 8300000, guid: f326ee447dd018a4c91dc3d48efe7ceb, type: 3}
-  lifeSupportSounds:
-  - {fileID: 8300000, guid: c739cca1ade3a414cbd62716b892bbbe, type: 3}
-  - {fileID: 8300000, guid: 6ba12a30e8af63f43b89d1843fdcda1d, type: 3}
-  - {fileID: 8300000, guid: d6a0ec572ddfba34e95016a70f080031, type: 3}
-  musicSounds:
-  - {fileID: 8300000, guid: 07dc305dac1a8884bb7189257e4c1343, type: 3}
-  - {fileID: 8300000, guid: b47f6ca1549640d48bf2a87a275931a9, type: 3}
-  footstepsMinInterval: 15
-  footstepsMaxInterval: 25
-  doorOpenMinInterval: 20
-  doorOpenMaxInterval: 30
-  chatterMinInterval: 30
-  chatterMaxInterval: 40
-  musicMinInterval: 40
-  musicMaxInterval: 55
-  showerMinInterval: 45
-  showerMaxInterval: 65
-  lifeSupportInterval: 20
-  radarInterval: 35
-  shipPulseVolumePercentage: 0.5
-  shipPulseChangeSpeed: 0.5
-  noiseReductionDelay: 30
-  decreasePercentage: 0.5
+  volumeAdjustmentInterval: 0.2
+  shipPulseVolumePercentage: 0.25
+  shipPulseChangeSpeed: 0.25
+  noiseReductionDelay: 0.1
+  noiseDecreasePercentage: 0.5
   decreaseDuration: 180
+  speedReductionDelay: 0.1
+  speedDecreasePercentage: 0.35
+  speedDecreaseDuration: 180
 --- !u!4 &142216565
 Transform:
   m_ObjectHideFlags: 0
@@ -1032,8 +1000,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 5397bc7762fb61b41990189bfa9e3e54, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.222
-  m_Pitch: 0.85
+  m_Volume: 0.8
+  m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -1123,7 +1091,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142216559}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f326ee447dd018a4c91dc3d48efe7ceb, type: 3}
@@ -1219,7 +1187,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142216559}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 7e5a9697927e7094fa8815cc8fe1c9db, type: 3}
@@ -1315,7 +1283,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142216559}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 65dfa16108866994c9a953ff5e580817, type: 3}
@@ -1411,7 +1379,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142216559}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: e76767bf9a0bea04cb0ba74884042091, type: 3}
@@ -1507,7 +1475,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142216559}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b47f6ca1549640d48bf2a87a275931a9, type: 3}
@@ -1875,8 +1843,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 373945443}
   m_LocalRotation: {x: 0, y: -1, z: -0, w: 0}
-  m_LocalPosition: {x: 0.13, y: -1.63, z: -0.95}
-  m_LocalScale: {x: 1.16397, y: 0.4450314, z: 0.7637902}
+  m_LocalPosition: {x: 0.113, y: -5.92, z: -1}
+  m_LocalScale: {x: 1.482747, y: 1, z: 1.3424081}
   m_Children: []
   m_Father: {fileID: 938404470}
   m_RootOrder: 0
@@ -1956,13 +1924,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: d196342902796db4db3d97fb4fc77ae4, type: 2}
-  currentShaderObject: {fileID: 373945443}
-  nextShaderObject: {fileID: 109519823}
-  handOverDelay: 60
-  firstTargetColor: {r: 0.6226415, g: 0.4796608, b: 0.09104663, a: 1}
-  secondTargetColor: {r: 0.6037736, g: 0.3520022, b: 0.06550375, a: 1}
-  colorChangeDuration: 30
-  targetSpeed: 3.5
+  targetColors:
+  - {r: 0.6698113, g: 0.30223194, b: 0, a: 1}
+  - {r: 0.6603774, g: 0, b: 0.07385803, a: 1}
+  - {r: 0.5849056, g: 0, b: 0.40559164, a: 1}
+  colorChangeDuration: 60
+  targetSpeed: 8.45
+  speedChangeDuration: 3
 --- !u!1 &421684170
 GameObject:
   m_ObjectHideFlags: 0
@@ -2237,6 +2205,16 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 5.17
       objectReference: {fileID: 0}
+    - target: {fileID: 389286676940360084, guid: 22276a8657744e04cba8ad0a2caf4195,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 389286676940360084, guid: 22276a8657744e04cba8ad0a2caf4195,
+        type: 3}
+      propertyPath: m_DefaultDuration
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22276a8657744e04cba8ad0a2caf4195, type: 3}
 --- !u!1001 &727856444
@@ -2259,17 +2237,17 @@ PrefabInstance:
     - target: {fileID: 3286882545743885416, guid: 24c705fa8b6829a4abd46d34cc8d0597,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.13
+      value: 0.113
       objectReference: {fileID: 0}
     - target: {fileID: 3286882545743885416, guid: 24c705fa8b6829a4abd46d34cc8d0597,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.63
+      value: -5.92
       objectReference: {fileID: 0}
     - target: {fileID: 3286882545743885416, guid: 24c705fa8b6829a4abd46d34cc8d0597,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.95
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 3286882545743885416, guid: 24c705fa8b6829a4abd46d34cc8d0597,
         type: 3}
@@ -2314,17 +2292,17 @@ PrefabInstance:
     - target: {fileID: 3286882545743885416, guid: 24c705fa8b6829a4abd46d34cc8d0597,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.16397
+      value: 1.482747
       objectReference: {fileID: 0}
     - target: {fileID: 3286882545743885416, guid: 24c705fa8b6829a4abd46d34cc8d0597,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.4450314
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3286882545743885416, guid: 24c705fa8b6829a4abd46d34cc8d0597,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.7637902
+      value: 1.3424081
       objectReference: {fileID: 0}
     - target: {fileID: 3286882545743885422, guid: 24c705fa8b6829a4abd46d34cc8d0597,
         type: 3}
