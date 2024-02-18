@@ -137,7 +137,7 @@ public class ShaderController : MonoBehaviour
 
     IEnumerator ChangeSpeedToTarget(float targetSpeed, float duration)
     {
-        float startSpeed = material.GetFloat("_Speed"); //shaders speed value
+        float startSpeed = GetComponent<Renderer>().material.GetFloat("_Speed"); //shaders speed value
         float startTime = Time.time;
 
         Debug.Log("Starting speed: " + startSpeed);
@@ -149,7 +149,7 @@ public class ShaderController : MonoBehaviour
 
             float lerpedSpeed = Mathf.Lerp(startSpeed, targetSpeed, t); // Calculate the new speed value with the lerp
 
-            material.SetFloat("_Speed", lerpedSpeed);    // Set new shader speed value
+            GetComponent<Renderer>().material.SetFloat("_Speed", lerpedSpeed);    // Set new shader speed value
             Debug.Log("Calculated Lerp speed: " + lerpedSpeed);
             Debug.Log("Current shader speed: " + material.GetFloat("_Speed"));
 
@@ -157,7 +157,7 @@ public class ShaderController : MonoBehaviour
             yield return null;
         }
 
-        material.SetFloat("_Speed", targetSpeed); // Making sure final speed matches the target
+        GetComponent<Renderer>().material.SetFloat("_Speed", targetSpeed); // Making sure final speed matches the target
 
         Debug.Log("Final speed: " + targetSpeed);
 

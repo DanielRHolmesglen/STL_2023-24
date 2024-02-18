@@ -71,7 +71,7 @@ public class AudioManager : MonoBehaviour
     //slowly decreasing speed/pitch
     public float speedReductionDelay = 30f; //how long before it starts to reduce sound
     public float speedDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
-    public float speedDecreaseDuration = 300f;  // The duration over which to decrease the volume
+    ///public float speedDecreaseDuration = 300f;  // The duration over which to decrease the volume
 
 
     void Start()
