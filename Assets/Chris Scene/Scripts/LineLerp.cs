@@ -9,6 +9,8 @@ public class LineLerp : MonoBehaviour
 
     private Vector3 endPosition = new Vector3(0, -11.5f, 21);
     private Vector3 startPosition;
+    //public GameObject centerEyesPos;
+    //private Vector3 centerEyes;
     public float duration = 2f; //time between point A and B
     private float elapsedTime;
     public GameObject lineMat;
@@ -33,6 +35,7 @@ public class LineLerp : MonoBehaviour
 
     void Start()
     {
+
         startPosition = transform.position; //it's own position
         lineMat = this.gameObject;
 
@@ -46,7 +49,7 @@ public class LineLerp : MonoBehaviour
     void Update()
     {
 
-        
+                
         /*if (elapsedTime < 2f) //trying to begin alpha lerp from colour to see through at the end of the movements' lerp
         {
             if(elapsedTime > 1.8f)
