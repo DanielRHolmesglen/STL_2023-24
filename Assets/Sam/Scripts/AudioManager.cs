@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    //audio sources
+    
     public AudioSource backgroundAmbience;    
     public AudioSource bgMusic;
-    public AudioSource shipPulse;
+    ///public AudioSource shipPulse;
+   
 
-    public float volumeAdjustmentInterval;
+    public float pitchIncrement = 0.005f;
+    public float desiredDuration = 2f;
+    public float targetPitch = 0.5f;
 
-    public float shipPulseVolumePercentage;
-    public float shipPulseChangeSpeed;
+    public AudioSource shipHum;
+    public AudioClip[] shipHums;
+
+    public LineLerp lineScript;
+
+
 
     /*
     public AudioSource doorOpen;    
@@ -31,8 +38,6 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] chatterSounds;
     public AudioClip[] lifeSupportSounds;
     public AudioClip[] musicSounds;
-
-
 
 
 
@@ -72,6 +77,11 @@ public class AudioManager : MonoBehaviour
     public float speedReductionDelay = 30f; //how long before it starts to reduce sound
     public float speedDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
     ///public float speedDecreaseDuration = 300f;  // The duration over which to decrease the volume
+   
+
+    ///public float volumeAdjustmentInterval;
+    ///public float shipPulseVolumeChangePercentage;
+    ///public float shipPulseVolumeChangeInterval;
 
 
     void Start()
@@ -83,8 +93,8 @@ public class AudioManager : MonoBehaviour
         bgMusic.loop = true;
         bgMusic.Play();
 
-        shipPulse.loop = true;
-        shipPulse.Play();
+        ///shipPulse.loop = true;
+        ///shipPulse.Play();
 
         /*
         //start playing periodical/random sounds
@@ -100,11 +110,18 @@ public class AudioManager : MonoBehaviour
         */
 
 
-        StartCoroutine(ContinuallyAdjustVolume());
+        ///StartCoroutine(ContinuallyAdjustVolume());
 
         //start gradually decreasing volumes and slow things down
         StartCoroutine(ManageAudioVolumes());
-        StartCoroutine(ManageAudioSpeeds());
+        StartCoroutine(ManageAudioPitches());
+
+
+
+        lineScript.OnLineReset.AddListener(AdjustPitch);
+        lineScript.OnLineReset.AddListener(PlayHum);
+
+
 
 
 
@@ -117,6 +134,35 @@ public class AudioManager : MonoBehaviour
         ///randomChatter.volume = Mathf.Lerp(0f, 0.8f, Mathf.PingPong(Time.time, 1f));
         ///bgMusic.volume = Mathf.Lerp(0.2f, 0.6f, Mathf.PingPong(Time.time, 1f));
         ///shipPulse.volume = Mathf.Lerp(0f, 0.5f, Mathf.PingPong(Time.time, 1f));
+
+
+    }
+
+    public void PlayHum()
+    {
+        // Select a random sound from the array
+        int randomIndex = Random.Range(0, shipHums.Length);
+        AudioClip randomSound = shipHums[randomIndex];
+
+        // Play the selected random sound
+        shipHum.clip = randomSound;
+        shipHum.Play();
+    }
+
+    void AdjustPitch()
+    {
+
+        // Check if the duration has reached the desired value
+        if (lineScript.duration >= desiredDuration)
+        {
+            // Perform any additional actions or stop adjusting the speed
+            Debug.Log("Duration reached desired value.");
+        }
+        else
+        {
+            // Adjust the pitch 
+            shipHum.pitch -= pitchIncrement;
+        }
 
 
     }
@@ -267,17 +313,17 @@ public class AudioManager : MonoBehaviour
     */
     ///---------------------------------------------------
 
-
+    /*
     IEnumerator ContinuallyAdjustVolume()
     {
         // Get the starting volume of the audio source
         float startVolume = shipPulse.volume;
 
         // Calculate the target volume
-        float targetVolume = startVolume * shipPulseVolumePercentage;
+        float targetVolume = startVolume * shipPulseVolumeChangePercentage;
 
         // Calculate the change in volume per interval
-        float calculatedVolumeChange = shipPulseChangeSpeed * volumeAdjustmentInterval;
+        float calculatedVolumeChange = shipPulseVolumeChangeInterval * volumeAdjustmentInterval;
 
 
         while (true)
@@ -301,6 +347,7 @@ public class AudioManager : MonoBehaviour
             yield return new WaitForSeconds(volumeAdjustmentInterval);
         }
     }
+    */
 
     IEnumerator DecreaseVolumeOverTime(AudioSource audioSource)
     {
@@ -319,8 +366,8 @@ public class AudioManager : MonoBehaviour
         audioSource.volume = targetVolume;
     }
 
-
-    IEnumerator DecreaseSpeedOverTime(AudioSource audioSource)
+    
+    IEnumerator DecreasePitchOverTime(AudioSource audioSource)
     {
         float startPitch = audioSource.pitch;
         float targetPitch = startPitch * (1.0f - speedDecreasePercentage);
@@ -336,6 +383,7 @@ public class AudioManager : MonoBehaviour
 
         audioSource.pitch = targetPitch;
     }
+    
 
 
     private IEnumerator ManageAudioVolumes()
@@ -344,7 +392,7 @@ public class AudioManager : MonoBehaviour
 
         StartCoroutine(DecreaseVolumeOverTime(backgroundAmbience));
         StartCoroutine(DecreaseVolumeOverTime(bgMusic));
-        StartCoroutine(DecreaseVolumeOverTime(shipPulse));
+        ///StartCoroutine(DecreaseVolumeOverTime(shipPulse));
         /*
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
         StartCoroutine(DecreaseVolumeOverTime(footsteps));
@@ -357,13 +405,14 @@ public class AudioManager : MonoBehaviour
 
     }
 
-    private IEnumerator ManageAudioSpeeds()
+    
+    private IEnumerator ManageAudioPitches()
     {
         yield return new WaitForSeconds(noiseReductionDelay);
 
-        StartCoroutine(DecreaseSpeedOverTime(backgroundAmbience));
-        StartCoroutine(DecreaseSpeedOverTime(bgMusic));
-        StartCoroutine(DecreaseSpeedOverTime(shipPulse));
+        StartCoroutine(DecreasePitchOverTime(backgroundAmbience));
+        StartCoroutine(DecreasePitchOverTime(bgMusic));
+        ///StartCoroutine(DecreasePitchOverTime(shipPulse));
         /*
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
         StartCoroutine(DecreaseVolumeOverTime(footsteps));
@@ -375,4 +424,5 @@ public class AudioManager : MonoBehaviour
         */
 
     }
+    
 }

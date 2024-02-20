@@ -1,17 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
 
 public class LineLerp : MonoBehaviour
 {
 
     //MOVEMENT LERP PARAMETERS
 
-    private Vector3 endPosition = new Vector3(0, -11.5f, 21);
+    private Vector3 endPosition = new Vector3(0, -13.5f, 21);
     private Vector3 startPosition;
-    public float duration = 2f; //time between point A and B
+    public float duration = 2.000f; //time between point A and B
     private float elapsedTime;
-    public GameObject lineMat;
+    GameObject lineMat;
 
     [SerializeField]
     private AnimationCurve curve; //curving the Lerp to make line slow down
@@ -28,6 +30,9 @@ public class LineLerp : MonoBehaviour
     private float alphaElapsedTime;    
     private Color startColor;
     private Color endColor;
+
+
+    public UnityEvent OnLineReset;
 
 
 
@@ -115,6 +120,9 @@ public class LineLerp : MonoBehaviour
         transform.position = startPosition;
         elapsedTime = 0;
         lineMat.SetActive(true);
+
+        //invoking event so other scripts can register this
+        OnLineReset.Invoke();
 
     }
 
