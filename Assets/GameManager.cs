@@ -1,7 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Liminal.SDK.VR;
+using Liminal.SDK.VR.Input;
 
 
 
@@ -16,7 +17,7 @@ public class GameManager : MonoBehaviour
     public AudioSource[] introSounds;
 
     public GameObject audioManagerObject; 
-    public GameObject shaderControllerObject;
+    public GameObject LineObject;
 
     private bool introSkipped = false;
 
@@ -28,15 +29,21 @@ public class GameManager : MonoBehaviour
         ///StartCoroutine(Images());
 
     }
-
-    void Update()
+    private void Update()
     {
-        // Check for skip input 
-        if (!introSkipped && OVRInput.GetDown(OVRInput.Button.One)) 
+    
+        var input = VRDevice.Device.PrimaryInputDevice; //setting up vr device. IS PRIMARY/RIGHT HAND.
+
+        if (!introSkipped && input.GetButton(VRButton.One) || !introSkipped && Input.GetMouseButton(0)) //Checking every frame if button is being pressed
         {
             SkipIntroSequence();
+
+
         }
+
+
     }
+    
 
 
     IEnumerator IntroSequence()
@@ -44,8 +51,8 @@ public class GameManager : MonoBehaviour
         // Show intro UI and set initial text
         introSequenceUI.SetActive(true);
         introImages[0].gameObject.SetActive(true);
-        introText.text = "Initialising... Press the A button to skip the induction";
-        yield return new WaitForSeconds(3f);
+        introText.text = "Welcome. Press A to skip the induction or right trigger to skip a step";
+        yield return new WaitForSeconds(7f);
 
         introImages[0].gameObject.SetActive(false);
         introImages[1].gameObject.SetActive(true);
@@ -55,10 +62,10 @@ public class GameManager : MonoBehaviour
         introText.text = "You may notice various lights and sounds throughout the ship as it continues its operations. These are routine functions of our vessel, ensuring your safety and comfort";
         yield return new WaitForSeconds(7f);
 
-        introImages[1].gameObject.SetActive(false);
-        introImages[2].gameObject.SetActive(true);
-        introText.text = "Should you require any assistance, press XYZ for the menu. Now, please close your eyes for this experience and relax, knowing you are safe. Good night astronaut.";
+        introText.text = "Should you require any assistance, press home for the menu. Now, please close your eyes for this experience and relax, knowing you are safe. Good night astronaut.";
         yield return new WaitForSeconds(7f);
+        introImages[1].gameObject.SetActive(false);
+
 
         // Turn off intro UI
         introSequenceUI.SetActive(false);
@@ -67,7 +74,7 @@ public class GameManager : MonoBehaviour
         ///yield return new WaitForSeconds(audioManagerDelay);
         audioManagerObject.SetActive(true);
         ///yield return new WaitForSeconds(shaderControllerDelay);
-        shaderControllerObject.SetActive(true);
+        LineObject.SetActive(true);
     }
 
     void SkipIntroSequence()
@@ -80,7 +87,7 @@ public class GameManager : MonoBehaviour
 
         // Start the AudioManager and ShaderController after delays
         audioManagerObject.SetActive(true);
-        shaderControllerObject.SetActive(true);
+        LineObject.SetActive(true);
     }
 
     /*
