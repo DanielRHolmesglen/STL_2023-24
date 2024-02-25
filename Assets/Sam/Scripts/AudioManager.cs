@@ -10,14 +10,14 @@ public class AudioManager : MonoBehaviour
     ///public AudioSource shipPulse;
    
 
-    public float pitchIncrement = 0.005f;
-    public float desiredDuration = 2f;
+    public float pitchIncrement = 0.005f; //reduces pitch by this amount each time line is reset
     public float targetPitch = 0.5f;
 
     public AudioSource shipHum;
     public AudioClip[] shipHums;
 
     public LineLerp lineScript;
+    public LineController lineController;
 
 
 
@@ -153,7 +153,7 @@ public class AudioManager : MonoBehaviour
     {
 
         // Check if the duration has reached the desired value
-        if (lineScript.duration >= desiredDuration)
+        if (lineScript.duration >= lineController.desiredDuration)
         {
             // Perform any additional actions or stop adjusting the speed
             Debug.Log("Duration reached desired value.");
