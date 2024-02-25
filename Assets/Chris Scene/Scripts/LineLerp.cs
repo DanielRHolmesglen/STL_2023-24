@@ -16,7 +16,7 @@ public class LineLerp : MonoBehaviour
     public float duration = 2.000f; //time between point A and B
     private float elapsedTime;
     GameObject lineMat;
-    public GameObject centerEye;
+    ///public GameObject centerEye;
     private Vector3 centreEyePos;
 
     [SerializeField]
@@ -55,7 +55,7 @@ public class LineLerp : MonoBehaviour
     //UPDATE CONTAINS ALL MOVEMENT
     void Update()
     {
-        centerEye.transform.position = centreEyePos; //storing Vector3 for "centerEye"
+        ///centerEye.transform.position = centreEyePos;
 
         /*if (elapsedTime < 2f) //trying to begin alpha lerp from colour to see through at the end of the movements' lerp
         {
@@ -122,7 +122,7 @@ public class LineLerp : MonoBehaviour
     private void Resetting() 
     {
         lineMat.SetActive(false);
-        transform.position = startPosition + centreEyePos;
+        transform.position = startPosition;
         elapsedTime = 0;
         lineMat.SetActive(true);
 
