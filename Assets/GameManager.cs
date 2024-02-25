@@ -8,16 +8,18 @@ using Liminal.SDK.VR.Input;
 
 public class GameManager : MonoBehaviour
 {
-    public float audioManagerDelay = 1f; 
-    public float shaderControllerDelay = 1f; 
 
     public GameObject introSequenceUI;
     public Text introText;
+
+    public string[] introTexts; // Array of predetermined texts
+    private int currentIndex = 0; // Index of the current text being displayed
+    public float textDisplayDuration = 7f; // Duration to display each text
+
     public GameObject[] introImages;
     public AudioSource[] introSounds;
-
     public GameObject audioManagerObject; 
-    public GameObject LineObject;
+    public GameObject movingLine;
 
     private bool introSkipped = false;
 
@@ -25,8 +27,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         // Start the intro sequence
-        StartCoroutine(IntroSequence());
+        StartCoroutine(StartIntroSequence());
         ///StartCoroutine(Images());
+        
+        StartCoroutine(DisplayTexts());
+
 
     }
     private void Update()
@@ -34,27 +39,72 @@ public class GameManager : MonoBehaviour
     
         var input = VRDevice.Device.PrimaryInputDevice; //setting up vr device. IS PRIMARY/RIGHT HAND.
 
-        if (!introSkipped && input.GetButton(VRButton.One) || !introSkipped && Input.GetMouseButton(0)) //Checking every frame if button is being pressed
+        if (!introSkipped && input.GetButton(VRButton.One) || !introSkipped && Input.GetMouseButton(1)) //Checking every frame if button is being pressed
         {
-            SkipIntroSequence();
+            EndIntroSequence();
+
+
+        }
+
+        if (!introSkipped && input.GetButton(VRButton.Primary) || !introSkipped && Input.GetMouseButton(0)) //Checking every frame if button is being pressed
+        {
+            currentIndex = (currentIndex + 1) % introTexts.Length;
 
 
         }
 
 
     }
-    
+
+    IEnumerator DisplayTexts()
+    {
+        //let initial text be displayed
+        introText.text = introTexts[currentIndex];
+        yield return new WaitForSeconds(textDisplayDuration);
+
+        while (true)
+        {
+            if (currentIndex == introTexts.Length - 1)
+            {
+                // Call the SkipIntroSequence method
+                EndIntroSequence();
+
+                // Stop the coroutine
+                StopCoroutine(DisplayTexts());
+            }
+            else
+            {
+                // Move to the next text in the array
+                currentIndex = (currentIndex + 1 % introTexts.Length);
+            }
+
+            //display and set the current text
+            introText.text = introTexts[currentIndex];
+
+            // Wait for the specified duration
+            yield return new WaitForSeconds(textDisplayDuration);
+
+            
+           
+
+        }
+    }
 
 
-    IEnumerator IntroSequence()
+
+    IEnumerator StartIntroSequence()
     {
         // Show intro UI and set initial text
         introSequenceUI.SetActive(true);
         introImages[0].gameObject.SetActive(true);
-        introText.text = "Welcome. Press A to skip the induction or right trigger to skip a step";
-        yield return new WaitForSeconds(7f);
+        ///introText.text = "Welcome. Press A to skip the induction or right trigger to skip a step";
+        
+        //waiting for the (I think) total time the intro should take if nothing is skipped.
+        yield return new WaitForSeconds(textDisplayDuration * (introTexts.Length));
 
-        introImages[0].gameObject.SetActive(false);
+      
+
+        /*
         introImages[1].gameObject.SetActive(true);
         introText.text = "Evening, astronaut. I know your day was draining and that you are preparing to rest. I'm conducting a final checkup to make sure you are comfortable.";
         yield return new WaitForSeconds(7f);
@@ -65,29 +115,22 @@ public class GameManager : MonoBehaviour
         introText.text = "Should you require any assistance, press home for the menu. Now, please close your eyes for this experience and relax, knowing you are safe. Good night astronaut.";
         yield return new WaitForSeconds(7f);
         introImages[1].gameObject.SetActive(false);
-
-
-        // Turn off intro UI
-        introSequenceUI.SetActive(false);
-
-        // Start the AudioManager and ShaderController
-        ///yield return new WaitForSeconds(audioManagerDelay);
-        audioManagerObject.SetActive(true);
-        ///yield return new WaitForSeconds(shaderControllerDelay);
-        LineObject.SetActive(true);
+        */
     }
 
-    void SkipIntroSequence()
+    void EndIntroSequence()
     {
         StopAllCoroutines(); // Stop the intro sequence coroutine
         introSkipped = true;
 
         // Turn off intro UI
         introSequenceUI.SetActive(false);
+        introImages[0].gameObject.SetActive(false);
+
 
         // Start the AudioManager and ShaderController after delays
         audioManagerObject.SetActive(true);
-        LineObject.SetActive(true);
+        movingLine.SetActive(true);
     }
 
     /*
