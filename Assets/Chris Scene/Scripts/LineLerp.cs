@@ -17,7 +17,7 @@ public class LineLerp : MonoBehaviour
     private float elapsedTime;
     GameObject lineMat;
     public GameObject centerEye;
-    private Vector3 centreEyePos;
+    //private Vector3 centreEyePos;
 
     [SerializeField]
     private AnimationCurve curve; //curving the Lerp to make line slow down
@@ -41,9 +41,7 @@ public class LineLerp : MonoBehaviour
 
 
     void Start()
-    {
-        startPosition = startPositionEmpty.transform.position; //it's own position (empty game object)
-        endPosition = endPositionEmpty.transform.position; //empty game object end pos
+    {        
         lineMat = this.gameObject;
 
         //material = GetComponent<Renderer>().material;
@@ -55,7 +53,10 @@ public class LineLerp : MonoBehaviour
     //UPDATE CONTAINS ALL MOVEMENT
     void Update()
     {
-        centerEye.transform.position = centreEyePos; //storing Vector3 for "centerEye"
+        startPosition = startPositionEmpty.transform.position; //it's own position (empty game object)
+        endPosition = endPositionEmpty.transform.position; //empty game object end pos
+
+        //centerEye.transform.position = centreEyePos; //storing Vector3 for "centerEye"
 
         /*if (elapsedTime < 2f) //trying to begin alpha lerp from colour to see through at the end of the movements' lerp
         {
@@ -122,7 +123,7 @@ public class LineLerp : MonoBehaviour
     private void Resetting() 
     {
         lineMat.SetActive(false);
-        transform.position = startPosition + centreEyePos;
+        transform.position = startPosition; 
         elapsedTime = 0;
         lineMat.SetActive(true);
 
