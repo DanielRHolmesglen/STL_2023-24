@@ -121,12 +121,18 @@ public class LineLerp : MonoBehaviour
     //RESETTING ALL THE PARAMETERS FOR LINE TO START AGAIN
     private void Resetting() 
     {
+        //updating the start and end positions
+        startPosition = startPositionEmpty.transform.position;
+        endPosition = endPositionEmpty.transform.position;
+
+        //turning off line, then moving its position back to start/resetting timer, then turning it back on
         lineMat.SetActive(false);
         transform.position = startPosition;
         elapsedTime = 0;
         lineMat.SetActive(true);
 
-        //invoking event so other scripts can register this
+       
+        //invoking event so other scripts (AKA sound) can register this
         OnLineReset.Invoke();
 
     }

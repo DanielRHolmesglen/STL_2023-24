@@ -34,23 +34,36 @@ public class GameManager : MonoBehaviour
 
 
     }
+
     private void Update()
     {
     
         var input = VRDevice.Device.PrimaryInputDevice; //setting up vr device. IS PRIMARY/RIGHT HAND.
 
-        if (!introSkipped && input.GetButton(VRButton.One) || !introSkipped && Input.GetMouseButton(1)) //Checking every frame if button is being pressed
+        if (!introSkipped && input.GetButtonDown(VRButton.One) || !introSkipped && Input.GetMouseButtonDown(1)) //Checking every frame if button is being pressed
         {
             EndIntroSequence();
 
 
         }
 
-        if (!introSkipped && input.GetButton(VRButton.Primary) || !introSkipped && Input.GetMouseButton(0)) //Checking every frame if button is being pressed
+        if (!introSkipped && input.GetButtonDown(VRButton.Primary) || !introSkipped && Input.GetMouseButtonDown(0)) //Checking every frame if button is being pressed
         {
-            currentIndex = (currentIndex + 1) % introTexts.Length;
+            introSkipped = true;
 
+            StopCoroutine(DisplayTexts());
+            if (currentIndex == introTexts.Length - 1)
+            {
+                EndIntroSequence();
+                StopCoroutine(DisplayTexts());
+            }
+            else
+            {
+                currentIndex = (currentIndex + 1) % introTexts.Length;
+            }
+            StartCoroutine(DisplayTexts());
 
+            introSkipped = false;
         }
 
 
@@ -62,32 +75,21 @@ public class GameManager : MonoBehaviour
         introText.text = introTexts[currentIndex];
         yield return new WaitForSeconds(textDisplayDuration);
 
-        while (true)
+
+        if (currentIndex == introTexts.Length - 1)
         {
-            if (currentIndex == introTexts.Length - 1)
-            {
-                // Call the SkipIntroSequence method
-                EndIntroSequence();
-
-                // Stop the coroutine
-                StopCoroutine(DisplayTexts());
-            }
-            else
-            {
-                // Move to the next text in the array
-                currentIndex = (currentIndex + 1 % introTexts.Length);
-            }
-
-            //display and set the current text
-            introText.text = introTexts[currentIndex];
-
-            // Wait for the specified duration
-            yield return new WaitForSeconds(textDisplayDuration);
-
-            
-           
-
+            // Call the SkipIntroSequence method
+            EndIntroSequence();
+            StopCoroutine(DisplayTexts());
         }
+        else
+        {
+            // Move to the next text in the array
+            currentIndex = (currentIndex + 1 % introTexts.Length);
+            StartCoroutine(DisplayTexts());
+        }
+
+
     }
 
 
