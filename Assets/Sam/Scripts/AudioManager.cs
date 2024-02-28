@@ -8,16 +8,22 @@ public class AudioManager : MonoBehaviour
     public AudioSource backgroundAmbience;    
     public AudioSource bgMusic;
     ///public AudioSource shipPulse;
-   
+    public AudioSource shipHum;
+    public AudioClip[] shipHums;
+    public AudioSource fan;
+
 
     public float pitchIncrement = 0.005f; //reduces pitch by this amount each time line is reset
     public float targetPitch = 0.5f;
 
-    public AudioSource shipHum;
-    public AudioClip[] shipHums;
 
     public LineLerp lineScript;
     public LineController lineController;
+
+    public float minFanInterval = 20f;
+    public float maxFanInterval = 20f;
+    public float fanDuration = 20f;
+
 
 
 
@@ -55,7 +61,7 @@ public class AudioManager : MonoBehaviour
 
 
     //Periodically played sounds (every X seconds)
-    public float lifeSupportInterval = 20f;
+    ///public float lifeSupportInterval = 20f;
     public float radarInterval = 35f;
     ///public float shipPulseInterval = 40f;
     
@@ -348,6 +354,23 @@ public class AudioManager : MonoBehaviour
         }
     }
     */
+    IEnumerator PlayFan()
+    {
+        while (true)
+        {
+            float interval = Random.Range(minFanInterval, maxFanInterval);
+            yield return new WaitForSeconds(interval);
+          
+            // Play the selected random sound
+            fan.Play();
+
+
+            //plays a random amount of the sound, some of them are too long as well
+            float timePlay = Random.Range(30, 40);
+            yield return new WaitForSeconds(timePlay);
+            fan.Stop();
+        }
+    }
 
     IEnumerator DecreaseVolumeOverTime(AudioSource audioSource)
     {
