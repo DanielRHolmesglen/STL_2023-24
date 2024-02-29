@@ -11,6 +11,10 @@ public class AudioManager : MonoBehaviour
     public AudioSource shipHum;
     public AudioClip[] shipHums;
     public AudioSource fan;
+    public AudioSource hydraulics;
+
+    public float minHydraulicsInterval = 20f;
+    public float maxHydraulicsInterval = 20f;
 
 
     public float pitchIncrement = 0.005f; //reduces pitch by this amount each time line is reset
@@ -20,9 +24,7 @@ public class AudioManager : MonoBehaviour
     public LineLerp lineScript;
     public LineController lineController;
 
-    public float minFanInterval = 20f;
-    public float maxFanInterval = 20f;
-    public float fanDuration = 20f;
+    
 
 
 
@@ -99,8 +101,25 @@ public class AudioManager : MonoBehaviour
         bgMusic.loop = true;
         bgMusic.Play();
 
-        ///shipPulse.loop = true;
-        ///shipPulse.Play();
+        fan.loop = true;
+        fan.Play();
+
+        //start gradually decreasing volumes and slow things down
+        StartCoroutine(ManageAudioVolumes());
+        StartCoroutine(ManageAudioPitches());
+
+
+        //adding listeners for hum to match with line
+        lineScript.OnLineReset.AddListener(AdjustPitch);
+        lineScript.OnLineReset.AddListener(PlayHum);
+
+        //begin random sounds 
+        StartCoroutine(PlayHydraulics());
+
+
+
+        ///shipHum.loop = true;
+        ///shipHum.Play();
 
         /*
         //start playing periodical/random sounds
@@ -115,17 +134,7 @@ public class AudioManager : MonoBehaviour
         StartCoroutine(PlayShower());
         */
 
-
         ///StartCoroutine(ContinuallyAdjustVolume());
-
-        //start gradually decreasing volumes and slow things down
-        StartCoroutine(ManageAudioVolumes());
-        StartCoroutine(ManageAudioPitches());
-
-
-
-        lineScript.OnLineReset.AddListener(AdjustPitch);
-        lineScript.OnLineReset.AddListener(PlayHum);
 
 
 
@@ -354,21 +363,20 @@ public class AudioManager : MonoBehaviour
         }
     }
     */
-    IEnumerator PlayFan()
+    IEnumerator PlayHydraulics()
     {
         while (true)
         {
-            float interval = Random.Range(minFanInterval, maxFanInterval);
+            float interval = Random.Range(minHydraulicsInterval, maxHydraulicsInterval);
             yield return new WaitForSeconds(interval);
           
             // Play the selected random sound
-            fan.Play();
-
+            hydraulics.Play();
 
             //plays a random amount of the sound, some of them are too long as well
-            float timePlay = Random.Range(30, 40);
-            yield return new WaitForSeconds(timePlay);
-            fan.Stop();
+            ///float timePlay = Random.Range(30, 40);
+            ///yield return new WaitForSeconds(timePlay);
+            ///hydraulics.Stop();
         }
     }
 
@@ -406,7 +414,7 @@ public class AudioManager : MonoBehaviour
 
         audioSource.pitch = targetPitch;
     }
-    
+
 
 
     private IEnumerator ManageAudioVolumes()
@@ -415,6 +423,9 @@ public class AudioManager : MonoBehaviour
 
         StartCoroutine(DecreaseVolumeOverTime(backgroundAmbience));
         StartCoroutine(DecreaseVolumeOverTime(bgMusic));
+
+        StartCoroutine(DecreaseVolumeOverTime(fan));
+        StartCoroutine(DecreaseVolumeOverTime(hydraulics));
         ///StartCoroutine(DecreaseVolumeOverTime(shipPulse));
         /*
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
@@ -435,6 +446,9 @@ public class AudioManager : MonoBehaviour
 
         StartCoroutine(DecreasePitchOverTime(backgroundAmbience));
         StartCoroutine(DecreasePitchOverTime(bgMusic));
+
+        StartCoroutine(DecreasePitchOverTime(fan));
+        StartCoroutine(DecreasePitchOverTime(hydraulics));
         ///StartCoroutine(DecreasePitchOverTime(shipPulse));
         /*
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
@@ -447,5 +461,5 @@ public class AudioManager : MonoBehaviour
         */
 
     }
-    
+
 }
