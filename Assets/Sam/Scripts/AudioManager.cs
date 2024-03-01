@@ -156,11 +156,11 @@ public class AudioManager : MonoBehaviour
     public void PlayHum()
     {
         // Select a random sound from the array
-        int randomIndex = Random.Range(0, shipHums.Length);
+        int randomIndex = Random.Range(0, shipHums.Length - 1);
         AudioClip randomSound = shipHums[randomIndex];
+        shipHum.clip = randomSound;
 
         // Play the selected random sound
-        shipHum.clip = randomSound;
         shipHum.Play();
     }
 
@@ -426,7 +426,9 @@ public class AudioManager : MonoBehaviour
 
         StartCoroutine(DecreaseVolumeOverTime(fan));
         StartCoroutine(DecreaseVolumeOverTime(hydraulics));
+        StartCoroutine(DecreaseVolumeOverTime(shipHum));
         ///StartCoroutine(DecreaseVolumeOverTime(shipPulse));
+
         /*
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
         StartCoroutine(DecreaseVolumeOverTime(footsteps));
@@ -439,7 +441,7 @@ public class AudioManager : MonoBehaviour
 
     }
 
-    
+
     private IEnumerator ManageAudioPitches()
     {
         yield return new WaitForSeconds(noiseReductionDelay);
