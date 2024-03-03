@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class NEWLineController : MonoBehaviour
 {
-    public Renderer renderer; 
+    public Color startColor;
+    public Color targetColor;
     public Color[] colors; // Array of target colors
     private int currentIndex = 0; // Index of the current target color
     public float colorChangeDuration = 60.0f; // Duration of each color change
@@ -12,12 +13,27 @@ public class NEWLineController : MonoBehaviour
     public LineLerp lineScript;
     public float desiredDuration = 2f;
 
+    private Renderer renderer;
+
+    private void Awake()
+    {
+        // Get the Renderer component
+        renderer = GetComponent<Renderer>();
+        
+    }
+
     private void Start()
     {
-        StartCoroutine(LerpColors());
+
+        startColor = renderer.material.color;
+        targetColor = colors[currentIndex];
+
+        StartCoroutine(LerpColor());
 
         // Subscribe to the OnLineReset event
         lineScript.OnLineReset.AddListener(AdjustDuration);
+
+       
     }
 
     void AdjustDuration()
@@ -35,11 +51,13 @@ public class NEWLineController : MonoBehaviour
         }
     }
 
-    private IEnumerator LerpColors()
+    
+    private IEnumerator LerpColor()
     {
         while (true)
         {
-            Color startColor = renderer.material.color;
+            Debug.Log("getting start and target color");
+            Color startColor = GetComponent<Renderer>().material.color;
             Color targetColor = colors[currentIndex];
 
             // Initialize lerp timer
@@ -48,6 +66,8 @@ public class NEWLineController : MonoBehaviour
             // Lerp the color over time
             while (elapsedTime < colorChangeDuration)
             {
+                Debug.Log("while looping");
+
                 // Calculate lerp ratio
                 float lerp = elapsedTime / colorChangeDuration;
 
@@ -55,10 +75,15 @@ public class NEWLineController : MonoBehaviour
                 Color lerpedColor = Color.Lerp(startColor, targetColor, lerp);
 
                 // Set both color and emissive color
-                renderer.material.SetColor("_Color", lerpedColor);
-                renderer.material.color = lerpedColor;
-                renderer.material.SetColor("_EmissionColor", lerpedColor);
+                GetComponent<Renderer>().material.SetColor("_BaseColor", lerpedColor);
+                GetComponent<Renderer>().material.SetColor("_Color", lerpedColor);
+                GetComponent<Renderer>().material.SetColor("_MainColor", lerpedColor);
+                GetComponent<Renderer>().material.color = lerpedColor;
+                GetComponent<Renderer>().material.SetColor("_EmissionColor", lerpedColor);
                 ///renderer.material.color = colors[currentIndex];
+
+                renderer.material.color = Color.Lerp(startColor, targetColor, elapsedTime / colorChangeDuration);
+
 
 
 
@@ -66,8 +91,9 @@ public class NEWLineController : MonoBehaviour
                 elapsedTime += Time.deltaTime;
 
                 // Wait for the end of the frame
-                yield return null;
+                yield return new WaitForEndOfFrame();
             }
+            Debug.Log("exiting loop");
 
             // Ensure the target color is reached
             ///SetMaterialColor(renderer.material, targetColor);
@@ -81,4 +107,27 @@ public class NEWLineController : MonoBehaviour
             currentIndex = (currentIndex + 1) % colors.Length;
         }
     }
+    
+    /*
+    private IEnumerator LerpColor()
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < colorChangeDuration)
+        {
+            renderer.material.color = Color.Lerp(startColor, targetColor, elapsedTime / colorChangeDuration);
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        renderer.material.color = targetColor;
+
+        // Move to the next color in the array
+        currentIndex = (currentIndex + 1) % colors.Length;
+        startColor = targetColor;
+        targetColor = colors[currentIndex];
+
+        StartCoroutine(LerpColor());
+    }
+    */
 }
