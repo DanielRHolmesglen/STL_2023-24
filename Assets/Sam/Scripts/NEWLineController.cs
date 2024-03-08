@@ -5,6 +5,7 @@ public class NEWLineController : MonoBehaviour
 {
     public Color startColor;
     public Color targetColor;
+   
     public Color[] colors; // Array of target colors
     private int currentIndex = 0; // Index of the current target color
     public float colorChangeDuration = 60.0f; // Duration of each color change
@@ -12,6 +13,7 @@ public class NEWLineController : MonoBehaviour
     public float durationIncrement = 0.005f; // Amount to increment the duration each time
     public LineLerp lineScript;
     public float desiredDuration = 2f;
+    
 
     private Renderer renderer;
 
@@ -82,10 +84,8 @@ public class NEWLineController : MonoBehaviour
                 GetComponent<Renderer>().material.SetColor("_EmissionColor", lerpedColor);
                 ///renderer.material.color = colors[currentIndex];
 
-                renderer.material.color = Color.Lerp(startColor, targetColor, elapsedTime / colorChangeDuration);
-
-
-
+                //Reduntant line of code
+                // renderer.material.color = Color.Lerp(startColor, targetColor, elapsedTime / colorChangeDuration);
 
                 // Update elapsed time
                 elapsedTime += Time.deltaTime;
@@ -105,6 +105,7 @@ public class NEWLineController : MonoBehaviour
 
             // Move to the next color in the array
             currentIndex = (currentIndex + 1) % colors.Length;
+         //   StartCoroutine(LerpColor());
         }
     }
     
