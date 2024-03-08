@@ -17,15 +17,24 @@ public class AudioManager : MonoBehaviour
     public float maxHydraulicsInterval = 20f;
 
 
-    public float pitchIncrement = 0.005f; //reduces pitch by this amount each time line is reset
-    public float targetPitch = 0.5f;
+    public float linePitchIncrement = 0.005f; //reduces pitch by this amount each time line is reset
+    public float linePitchReduction = 0.5f; //how much to overall reduce pitch
 
 
     public LineLerp lineScript;
     public LineController lineController;
 
-    
 
+    //Lowering overall volume
+    public float decreaseDuration = 300f;  // The duration over which to decrease overall volume and pitch
+
+    ///public float noiseReductionDelay = 30f; //how long before it starts to reduce sound
+    public float noiseDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
+
+    //slowly decreasing speed/pitch
+    ///public float pitchReductionDelay = 30f; //how long before it starts to reduce sound
+    public float pitchDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
+    ///public float speedDecreaseDuration = 300f;  // The duration over which to decrease the volume
 
 
 
@@ -76,16 +85,8 @@ public class AudioManager : MonoBehaviour
 
     */
 
-    //Lowering overall volume
-    public float noiseReductionDelay = 30f; //how long before it starts to reduce sound
-    public float noiseDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
-    public float decreaseDuration = 300f;  // The duration over which to decrease the volume
 
-    //slowly decreasing speed/pitch
-    public float speedReductionDelay = 30f; //how long before it starts to reduce sound
-    public float speedDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
-    ///public float speedDecreaseDuration = 300f;  // The duration over which to decrease the volume
-   
+
 
     ///public float volumeAdjustmentInterval;
     ///public float shipPulseVolumeChangePercentage;
@@ -110,7 +111,7 @@ public class AudioManager : MonoBehaviour
 
 
         //adding listeners for hum to match with line
-        lineScript.OnLineReset.AddListener(AdjustPitch);
+        lineScript.OnLineReset.AddListener(AdjustHumPitch);
         lineScript.OnLineReset.AddListener(PlayHum);
 
         //begin random sounds 
@@ -142,6 +143,13 @@ public class AudioManager : MonoBehaviour
 
     }
 
+    private void Awake()
+    {
+        linePitchIncrement = (linePitchReduction) / decreaseDuration;
+
+
+    }
+
     void Update()
     {
         //Adjust the volume of sounds here (e.g., using Mathf.Lerp)
@@ -164,7 +172,7 @@ public class AudioManager : MonoBehaviour
         shipHum.Play();
     }
 
-    void AdjustPitch()
+    void AdjustHumPitch()
     {
 
         // Check if the duration has reached the desired value
@@ -176,7 +184,7 @@ public class AudioManager : MonoBehaviour
         else
         {
             // Adjust the pitch 
-            shipHum.pitch -= pitchIncrement;
+            shipHum.pitch -= linePitchIncrement;
         }
 
 
@@ -401,7 +409,7 @@ public class AudioManager : MonoBehaviour
     IEnumerator DecreasePitchOverTime(AudioSource audioSource)
     {
         float startPitch = audioSource.pitch;
-        float targetPitch = startPitch * (1.0f - speedDecreasePercentage);
+        float targetPitch = startPitch * (1.0f - pitchDecreasePercentage);
 
         float startTime = Time.time;
 
@@ -419,7 +427,7 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator ManageAudioVolumes()
     {
-        yield return new WaitForSeconds(noiseReductionDelay);
+        yield return new WaitForSeconds(0.1f);
 
         StartCoroutine(DecreaseVolumeOverTime(backgroundAmbience));
         StartCoroutine(DecreaseVolumeOverTime(bgMusic));
@@ -427,7 +435,7 @@ public class AudioManager : MonoBehaviour
         StartCoroutine(DecreaseVolumeOverTime(fan));
         StartCoroutine(DecreaseVolumeOverTime(hydraulics));
         StartCoroutine(DecreaseVolumeOverTime(shipHum));
-        ///StartCoroutine(DecreaseVolumeOverTime(shipPulse));
+      
 
         /*
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
@@ -444,14 +452,14 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator ManageAudioPitches()
     {
-        yield return new WaitForSeconds(noiseReductionDelay);
+        yield return new WaitForSeconds(0.1f);
 
         StartCoroutine(DecreasePitchOverTime(backgroundAmbience));
         StartCoroutine(DecreasePitchOverTime(bgMusic));
 
-        StartCoroutine(DecreasePitchOverTime(fan));
+        ///StartCoroutine(DecreasePitchOverTime(fan));
         StartCoroutine(DecreasePitchOverTime(hydraulics));
-        ///StartCoroutine(DecreasePitchOverTime(shipPulse));
+      
         /*
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
         StartCoroutine(DecreaseVolumeOverTime(footsteps));

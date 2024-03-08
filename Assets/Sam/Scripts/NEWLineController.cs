@@ -8,6 +8,7 @@ public class NEWLineController : MonoBehaviour
    
     public Color[] colors; // Array of target colors
     private int currentIndex = 0; // Index of the current target color
+    public float totalColorChangeDuration = 300f;
     public float colorChangeDuration = 60.0f; // Duration of each color change
 
     public float durationIncrement = 0.005f; // Amount to increment the duration each time
@@ -21,7 +22,12 @@ public class NEWLineController : MonoBehaviour
     {
         // Get the Renderer component
         renderer = GetComponent<Renderer>();
-        
+
+        //calculating the duration for each color change
+        colorChangeDuration = totalColorChangeDuration / (colors.Length);
+
+        //calcualating the incredment to slow line speed per 'tick'
+        durationIncrement = (desiredDuration - lineScript.duration) / totalColorChangeDuration;
     }
 
     private void Start()
