@@ -12,9 +12,13 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] shipHums;
     public AudioSource fan;
     public AudioSource hydraulics;
+    public AudioSource thrusters;
+
 
     public float minHydraulicsInterval = 20f;
     public float maxHydraulicsInterval = 20f;
+    public float minThrustersInterval = 20f;
+    public float maxThrustersInterval = 20f;
 
 
     public float linePitchIncrement = 0.005f; //reduces pitch by this amount each time line is reset
@@ -35,6 +39,11 @@ public class AudioManager : MonoBehaviour
     ///public float pitchReductionDelay = 30f; //how long before it starts to reduce sound
     public float pitchDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
     ///public float speedDecreaseDuration = 300f;  // The duration over which to decrease the volume
+
+    public float endOfSoundWait = 30;
+    public float initialSoundDelay = 30f;
+    public bool hydraulicsCooldown = false;
+    public bool thrustersCooldown = false;
 
 
 
@@ -79,18 +88,19 @@ public class AudioManager : MonoBehaviour
 
     //some specific volume adjustments
     public float shipPulseVolumePercentage = 0.5f; // Target volume percentage (0 to 1)
-    public float shipPulseChangeSpeed = 0.5f; // Volume change speed per second
-
-
-
+    public float shipPulseChangeSpeed = 0.5f; // Volume change speed per 
     */
-
-
-
 
     ///public float volumeAdjustmentInterval;
     ///public float shipPulseVolumeChangePercentage;
     ///public float shipPulseVolumeChangeInterval;
+
+    private void Awake()
+    {
+        linePitchIncrement = (linePitchReduction) / decreaseDuration;
+
+
+    }
 
 
     void Start()
@@ -115,7 +125,9 @@ public class AudioManager : MonoBehaviour
         lineScript.OnLineReset.AddListener(PlayHum);
 
         //begin random sounds 
-        StartCoroutine(PlayHydraulics());
+        Invoke("StartHydraulicsCoroutine", initialSoundDelay);
+        Invoke("StartThrustersCoroutine", initialSoundDelay);
+
 
 
 
@@ -137,28 +149,16 @@ public class AudioManager : MonoBehaviour
 
         ///StartCoroutine(ContinuallyAdjustVolume());
 
-
-
-
-
     }
 
-    private void Awake()
+    void StartHydraulicsCoroutine()
     {
-        linePitchIncrement = (linePitchReduction) / decreaseDuration;
-
-
+        StartCoroutine(PlayHydraulics());
     }
 
-    void Update()
+    void StartThrustersCoroutine()
     {
-        //Adjust the volume of sounds here (e.g., using Mathf.Lerp)
-
-        ///randomChatter.volume = Mathf.Lerp(0f, 0.8f, Mathf.PingPong(Time.time, 1f));
-        ///bgMusic.volume = Mathf.Lerp(0.2f, 0.6f, Mathf.PingPong(Time.time, 1f));
-        ///shipPulse.volume = Mathf.Lerp(0f, 0.5f, Mathf.PingPong(Time.time, 1f));
-
-
+        StartCoroutine(PlayThrusters());
     }
 
     public void PlayHum()
@@ -375,17 +375,69 @@ public class AudioManager : MonoBehaviour
     {
         while (true)
         {
-            float interval = Random.Range(minHydraulicsInterval, maxHydraulicsInterval);
-            yield return new WaitForSeconds(interval);
-          
-            // Play the selected random sound
-            hydraulics.Play();
+            if (!hydraulicsCooldown && !thrustersCooldown)
+            {
+                //start cooldown (to stop overlapping)
+                hydraulicsCooldown = true;
+                hydraulics.Play();
 
-            //plays a random amount of the sound, some of them are too long as well
-            ///float timePlay = Random.Range(30, 40);
-            ///yield return new WaitForSeconds(timePlay);
-            ///hydraulics.Stop();
+
+                //wait for a random amount of time before playing again 
+                float interval = Random.Range(minHydraulicsInterval, maxHydraulicsInterval);
+                yield return new WaitForSeconds(interval);
+
+                // wait for its duration, then make sure its off
+                hydraulics.Stop();
+                hydraulicsCooldown = false;
+
+                //generic wait amount so sounds aren't constantly playing. However is done after resetting bool to give other sounds a chance to play.
+                yield return new WaitForSeconds(endOfSoundWait);
+
+              
+
+            }
+            else
+            {
+                // If on cooldown, wait for a short duration before checking again
+                yield return new WaitForSeconds(0.5f);
+            }
+
         }
+
+
+    }
+
+    IEnumerator PlayThrusters()
+    {
+        while (true)
+        {
+            if (!hydraulicsCooldown && !thrustersCooldown)
+            {
+                //start cooldown (to stop overlapping)
+                thrustersCooldown = true;
+                thrusters.Play();
+
+                //wait for a random amount of time before playing again 
+                float interval = Random.Range(minThrustersInterval, maxThrustersInterval);
+                yield return new WaitForSeconds(interval);
+
+                //wait for its duration, then make sure its off
+                thrusters.Stop();
+                thrustersCooldown = false;
+
+                //generic wait amount so sounds aren't constantly playing
+                yield return new WaitForSeconds(endOfSoundWait);
+
+
+            }
+            else
+            {
+                // If on cooldown, wait for a short duration before checking again
+                yield return new WaitForSeconds(0.5f);
+            }
+
+        }
+
     }
 
     IEnumerator DecreaseVolumeOverTime(AudioSource audioSource)
