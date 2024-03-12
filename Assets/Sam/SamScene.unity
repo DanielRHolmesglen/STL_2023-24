@@ -587,6 +587,7 @@ GameObject:
   - component: {fileID: 142216561}
   - component: {fileID: 142216560}
   - component: {fileID: 142216566}
+  - component: {fileID: 142216567}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -601,20 +602,20 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142216559}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c88e2c4a5d33cbd45b5d9f5b0f3e4552, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.1
-  m_Pitch: 0.85
-  Loop: 0
+  m_Volume: 0.02
+  m_Pitch: 0.75
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 5
+  MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -702,8 +703,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: bcf914d0b4fc2cd45999d602910d42e6, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.85
-  m_Pitch: 1
+  m_Volume: 0.8
+  m_Pitch: 0.85
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -1000,24 +1001,26 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 662894777b9838241939f98a5408948f, type: 3}
   - {fileID: 8300000, guid: 745ce9dff21ffcd45a484c3f1c044ea9, type: 3}
   - {fileID: 8300000, guid: 7577bd2579f16b54499bc07b09328210, type: 3}
-  fan: {fileID: 142216560}
+  fan: {fileID: 142216561}
   hydraulics: {fileID: 142216560}
   thrusters: {fileID: 142216566}
   minHydraulicsInterval: 20
   maxHydraulicsInterval: 30
   minThrustersInterval: 40
   maxThrustersInterval: 60
-  linePitchIncrement: 0.005
-  linePitchReduction: 0.5
-  lineScript: {fileID: 351509928}
-  lineController: {fileID: 351509929}
-  decreaseDuration: 300
-  noiseDecreasePercentage: 0.5
-  pitchDecreasePercentage: 0.5
+  hydraulicsPlayDuration: 16
+  thrustersPlayDuration: 22
   endOfSoundWait: 30
   initialSoundDelay: 30
   hydraulicsCooldown: 0
   thrustersCooldown: 0
+  linePitchIncrement: 0.005
+  linePitchReduction: 0.5
+  overallSoundDecreaseDuration: 300
+  overallSoundDecreasePercentage: 0.5
+  overallPitchDecreasePercentage: 0.5
+  lineScript: {fileID: 351509928}
+  lineController: {fileID: 351509929}
 --- !u!4 &142216565
 Transform:
   m_ObjectHideFlags: 0
@@ -1039,14 +1042,110 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 142216559}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b74964245ab1d41488947c2738242486, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.85
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!82 &142216567
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142216559}
+  m_Enabled: 0
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 8d6325cc4199b994da423556d363a01c, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.7
+  m_Pitch: 0.7
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -3199,17 +3298,19 @@ MonoBehaviour:
   maxHydraulicsInterval: 20
   minThrustersInterval: 20
   maxThrustersInterval: 20
-  linePitchIncrement: 0.005
-  linePitchReduction: 0.5
-  lineScript: {fileID: 351509928}
-  lineController: {fileID: 351509929}
-  decreaseDuration: 180
-  noiseDecreasePercentage: 0.5
-  pitchDecreasePercentage: 0.5
+  hydraulicsPlayDuration: 12
+  thrustersPlayDuration: 12
   endOfSoundWait: 30
   initialSoundDelay: 30
   hydraulicsCooldown: 0
   thrustersCooldown: 0
+  linePitchIncrement: 0.005
+  linePitchReduction: 0.5
+  overallSoundDecreaseDuration: 300
+  overallSoundDecreasePercentage: 0.5
+  overallPitchDecreasePercentage: 0.5
+  lineScript: {fileID: 351509928}
+  lineController: {fileID: 351509929}
 --- !u!4 &428735230
 Transform:
   m_ObjectHideFlags: 0
