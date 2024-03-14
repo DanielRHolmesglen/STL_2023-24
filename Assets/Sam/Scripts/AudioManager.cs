@@ -12,21 +12,42 @@ public class AudioManager : MonoBehaviour
     public AudioClip[] shipHums;
     public AudioSource fan;
     public AudioSource hydraulics;
+    public AudioSource thrusters;
+
 
     public float minHydraulicsInterval = 20f;
     public float maxHydraulicsInterval = 20f;
+    public float minThrustersInterval = 20f;
+    public float maxThrustersInterval = 20f;
+    public float hydraulicsPlayDuration = 12;
+    public float thrustersPlayDuration = 20;
 
 
-    public float pitchIncrement = 0.005f; //reduces pitch by this amount each time line is reset
-    public float targetPitch = 0.5f;
+    public float endOfSoundWait = 30;
+    public float initialSoundDelay = 30f;
+    public bool hydraulicsCooldown = false;
+    public bool thrustersCooldown = false;
+
+    public float linePitchIncrement = 0.005f; //reduces pitch by this amount each time line is reset
+    public float linePitchReduction = 0.5f; //how much to overall reduce pitch
+
+
+
+
+    //Lowering overall volume
+    public float overallSoundDecreaseDuration = 300f;  // The duration over which to decrease overall volume and pitch
+
+    ///public float noiseReductionDelay = 30f; //how long before it starts to reduce sound
+    public float overallSoundDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
+
+    //slowly decreasing speed/pitch
+    ///public float pitchReductionDelay = 30f; //how long before it starts to reduce sound
+    public float overallPitchDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
+    ///public float speedDecreaseDuration = 300f;  // The duration over which to decrease the volume
 
 
     public LineLerp lineScript;
     public LineController lineController;
-
-    
-
-
 
 
     /*
@@ -70,26 +91,19 @@ public class AudioManager : MonoBehaviour
 
     //some specific volume adjustments
     public float shipPulseVolumePercentage = 0.5f; // Target volume percentage (0 to 1)
-    public float shipPulseChangeSpeed = 0.5f; // Volume change speed per second
-
-
-
+    public float shipPulseChangeSpeed = 0.5f; // Volume change speed per 
     */
-
-    //Lowering overall volume
-    public float noiseReductionDelay = 30f; //how long before it starts to reduce sound
-    public float noiseDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
-    public float decreaseDuration = 300f;  // The duration over which to decrease the volume
-
-    //slowly decreasing speed/pitch
-    public float speedReductionDelay = 30f; //how long before it starts to reduce sound
-    public float speedDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
-    ///public float speedDecreaseDuration = 300f;  // The duration over which to decrease the volume
-   
 
     ///public float volumeAdjustmentInterval;
     ///public float shipPulseVolumeChangePercentage;
     ///public float shipPulseVolumeChangeInterval;
+
+    private void Awake()
+    {
+        linePitchIncrement = (linePitchReduction) / overallSoundDecreaseDuration;
+
+
+    }
 
 
     void Start()
@@ -110,11 +124,13 @@ public class AudioManager : MonoBehaviour
 
 
         //adding listeners for hum to match with line
-        lineScript.OnLineReset.AddListener(AdjustPitch);
+        lineScript.OnLineReset.AddListener(AdjustHumPitch);
         lineScript.OnLineReset.AddListener(PlayHum);
 
         //begin random sounds 
-        StartCoroutine(PlayHydraulics());
+        Invoke("StartHydraulicsCoroutine", initialSoundDelay);
+        Invoke("StartThrustersCoroutine", initialSoundDelay);
+
 
 
 
@@ -136,21 +152,16 @@ public class AudioManager : MonoBehaviour
 
         ///StartCoroutine(ContinuallyAdjustVolume());
 
-
-
-
-
     }
 
-    void Update()
+    void StartHydraulicsCoroutine()
     {
-        //Adjust the volume of sounds here (e.g., using Mathf.Lerp)
+        StartCoroutine(PlayHydraulics());
+    }
 
-        ///randomChatter.volume = Mathf.Lerp(0f, 0.8f, Mathf.PingPong(Time.time, 1f));
-        ///bgMusic.volume = Mathf.Lerp(0.2f, 0.6f, Mathf.PingPong(Time.time, 1f));
-        ///shipPulse.volume = Mathf.Lerp(0f, 0.5f, Mathf.PingPong(Time.time, 1f));
-
-
+    void StartThrustersCoroutine()
+    {
+        StartCoroutine(PlayThrusters());
     }
 
     public void PlayHum()
@@ -164,7 +175,7 @@ public class AudioManager : MonoBehaviour
         shipHum.Play();
     }
 
-    void AdjustPitch()
+    void AdjustHumPitch()
     {
 
         // Check if the duration has reached the desired value
@@ -176,7 +187,7 @@ public class AudioManager : MonoBehaviour
         else
         {
             // Adjust the pitch 
-            shipHum.pitch -= pitchIncrement;
+            shipHum.pitch -= linePitchIncrement;
         }
 
 
@@ -367,29 +378,86 @@ public class AudioManager : MonoBehaviour
     {
         while (true)
         {
-            float interval = Random.Range(minHydraulicsInterval, maxHydraulicsInterval);
-            yield return new WaitForSeconds(interval);
-          
-            // Play the selected random sound
-            hydraulics.Play();
+            if (!hydraulicsCooldown && !thrustersCooldown)
+            {
+                //start cooldown (to stop overlapping)
+                hydraulicsCooldown = true;
+                hydraulics.Play();
 
-            //plays a random amount of the sound, some of them are too long as well
-            ///float timePlay = Random.Range(30, 40);
-            ///yield return new WaitForSeconds(timePlay);
-            ///hydraulics.Stop();
+                //since it loops, this is to have it stop early.
+                yield return new WaitForSeconds(hydraulicsPlayDuration);
+                hydraulics.Stop();
+
+                //cooldown duration
+                float interval = Random.Range(minHydraulicsInterval, maxHydraulicsInterval);
+                yield return new WaitForSeconds(interval);
+
+                //turn off cooldown bool. Lets other sounds have a go before it tries to play again.
+                hydraulicsCooldown = false;
+
+                //generic wait amount so sounds aren't constantly playing. However is done after resetting bool to give other sounds a chance to play.
+                yield return new WaitForSeconds(endOfSoundWait);
+
+              
+
+            }
+            else
+            {
+                // If on cooldown, wait for a short duration before checking again
+                yield return new WaitForSeconds(0.5f);
+            }
+
         }
+
+
+    }
+
+    IEnumerator PlayThrusters()
+    {
+        while (true)
+        {
+            if (!hydraulicsCooldown && !thrustersCooldown)
+            {
+                //start cooldown (to stop overlapping)
+                thrustersCooldown = true;
+                thrusters.Play();
+
+                //since it loops, this is to have it stop early.
+                yield return new WaitForSeconds(thrustersPlayDuration);
+                thrusters.Stop();
+
+                //cooldown duration
+                float interval = Random.Range(minThrustersInterval, maxThrustersInterval);
+                yield return new WaitForSeconds(interval);
+
+                //turn off cooldown bool. Lets other sounds have a go before it tries to play again.
+                thrustersCooldown = false;
+
+                //generic wait amount so sounds aren't constantly playing
+                yield return new WaitForSeconds(endOfSoundWait);
+
+
+            }
+            else
+            {
+                // If on cooldown, wait for a short duration before checking again
+                yield return new WaitForSeconds(0.5f);
+            }
+
+        }
+
     }
 
     IEnumerator DecreaseVolumeOverTime(AudioSource audioSource)
     {
         float startVolume = audioSource.volume;
-        float targetVolume = startVolume * (1.0f - noiseDecreasePercentage);
+        float targetVolume = startVolume * (1.0f - overallSoundDecreasePercentage);
 
         float startTime = Time.time;
 
-        while (Time.time - startTime < decreaseDuration)
+        while (Time.time - startTime < overallSoundDecreaseDuration)
         {
-            float t = (Time.time - startTime) / decreaseDuration;
+            float t = (Time.time - startTime) / overallSoundDecreaseDuration;
             audioSource.volume = Mathf.Lerp(startVolume, targetVolume, t);
             yield return null;
         }
@@ -398,16 +466,16 @@ public class AudioManager : MonoBehaviour
     }
 
     
-    IEnumerator DecreasePitchOverTime(AudioSource audioSource)
+    IEnumerator DecreasePitchOverTime(AudioSource audioSource, float pitchDecrease)
     {
         float startPitch = audioSource.pitch;
-        float targetPitch = startPitch * (1.0f - speedDecreasePercentage);
+        float targetPitch = startPitch * (1.0f - pitchDecrease);
 
         float startTime = Time.time;
 
-        while (Time.time - startTime < decreaseDuration)
+        while (Time.time - startTime < overallSoundDecreaseDuration)
         {
-            float t = (Time.time - startTime) / decreaseDuration;
+            float t = (Time.time - startTime) / overallSoundDecreaseDuration;
             audioSource.pitch = Mathf.Lerp(startPitch, targetPitch, t);
             yield return null;
         }
@@ -419,15 +487,17 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator ManageAudioVolumes()
     {
-        yield return new WaitForSeconds(noiseReductionDelay);
+        yield return new WaitForSeconds(0.1f);
 
         StartCoroutine(DecreaseVolumeOverTime(backgroundAmbience));
         StartCoroutine(DecreaseVolumeOverTime(bgMusic));
 
         StartCoroutine(DecreaseVolumeOverTime(fan));
-        StartCoroutine(DecreaseVolumeOverTime(hydraulics));
         StartCoroutine(DecreaseVolumeOverTime(shipHum));
-        ///StartCoroutine(DecreaseVolumeOverTime(shipPulse));
+
+        StartCoroutine(DecreaseVolumeOverTime(hydraulics));
+        StartCoroutine(DecreaseVolumeOverTime(thrusters));
+
 
         /*
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
@@ -444,14 +514,16 @@ public class AudioManager : MonoBehaviour
 
     private IEnumerator ManageAudioPitches()
     {
-        yield return new WaitForSeconds(noiseReductionDelay);
+        yield return new WaitForSeconds(0.1f);
 
-        StartCoroutine(DecreasePitchOverTime(backgroundAmbience));
-        StartCoroutine(DecreasePitchOverTime(bgMusic));
+        StartCoroutine(DecreasePitchOverTime(backgroundAmbience, overallPitchDecreasePercentage));
+        StartCoroutine(DecreasePitchOverTime(bgMusic, overallPitchDecreasePercentage));
 
-        StartCoroutine(DecreasePitchOverTime(fan));
-        StartCoroutine(DecreasePitchOverTime(hydraulics));
-        ///StartCoroutine(DecreasePitchOverTime(shipPulse));
+        StartCoroutine(DecreasePitchOverTime(fan, 0.2f));
+        StartCoroutine(DecreasePitchOverTime(hydraulics, overallPitchDecreasePercentage));
+        StartCoroutine(DecreasePitchOverTime(thrusters, overallPitchDecreasePercentage));
+
+
         /*
         StartCoroutine(DecreaseVolumeOverTime(doorOpen));
         StartCoroutine(DecreaseVolumeOverTime(footsteps));
