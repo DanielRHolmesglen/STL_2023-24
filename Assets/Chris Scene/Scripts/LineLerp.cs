@@ -15,7 +15,7 @@ public class LineLerp : MonoBehaviour
     private Vector3 startPosition;
     public float duration = 2.000f; //time between point A and B
     private float elapsedTime;
-    GameObject lineMat;
+    Renderer lineMat;
     ///public GameObject centerEye;
     private Vector3 centreEyePos;
 
@@ -44,7 +44,7 @@ public class LineLerp : MonoBehaviour
     {
         startPosition = startPositionEmpty.transform.position; //it's own position (empty game object)
         endPosition = endPositionEmpty.transform.position; //empty game object end pos
-        lineMat = this.gameObject;
+        lineMat = GetComponent<Renderer>();
 
         //material = GetComponent<Renderer>().material;
         //startColor = material.color;
@@ -126,10 +126,10 @@ public class LineLerp : MonoBehaviour
         endPosition = endPositionEmpty.transform.position;
 
         //turning off line, then moving its position back to start/resetting timer, then turning it back on
-        lineMat.SetActive(false);
+        lineMat.enabled = false;
         transform.position = startPosition;
         elapsedTime = 0;
-        lineMat.SetActive(true);
+        lineMat.enabled = true;
 
        
         //invoking event so other scripts (AKA sound) can register this

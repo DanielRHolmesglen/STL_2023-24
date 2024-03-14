@@ -40,13 +40,14 @@ public class GameManager : MonoBehaviour
     
         var input = VRDevice.Device.PrimaryInputDevice; //setting up vr device. IS PRIMARY/RIGHT HAND.
 
-        if (!introSkipped && input.GetButtonDown(VRButton.One) || !introSkipped && Input.GetMouseButtonDown(1)) //Checking every frame if button is being pressed
+        if (!introSkipped && input.GetButtonDown(VRButton.Primary) || !introSkipped && Input.GetMouseButtonDown(0)) //Checking every frame if button is being pressed
         {
             EndIntroSequence();
 
 
         }
 
+        /*
         if (!introSkipped && input.GetButtonDown(VRButton.Primary) || !introSkipped && Input.GetMouseButtonDown(0)) //Checking every frame if button is being pressed
         {
             introSkipped = true;
@@ -65,6 +66,7 @@ public class GameManager : MonoBehaviour
 
             introSkipped = false;
         }
+        */
 
 
     }

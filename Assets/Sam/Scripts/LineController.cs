@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class LineController : MonoBehaviour
 {
-    public Material material;
+    public MeshRenderer renderer;
+    ///public Material material;
+    ///private Material _instancedMat;
+    ///private Material[] _mats;
 
-    public Color[] targetColors; // Array of target colors
+
+    public Color[] colors; // Array of target colors
+    public Color startColor; //debugging
+    public Color targetColor; //debugging
     private int currentIndex = 0; // Index of the current target color
-    ///public float changeInterval = 5.0f; // Time interval between color changes
     public float colorChangeDuration = 60.0f; // Duration of each color change
 
 
@@ -16,18 +21,34 @@ public class LineController : MonoBehaviour
     public LineLerp lineScript;
     public float desiredDuration = 2f;
 
-    
 
+    private void Awake()
+    {
+        // Create a new instance
+        ///_instancedMat = Instantiate(material);
+        // add the instance to an array of materials 
+        ///_mats = new Material[] { _instancedMat };
+        // Set the materials of the renderer to this array
+        ///renderer.materials = _mats;
+
+
+    }
     void Start()
     {
         // Start the ColorChangeManager coroutine
-        ///StartCoroutine(ColorChangeManager());
+        ///StartCoroutine(ColorChangeManager
 
+        StartCoroutine(LerpColors());
 
         // Subscribe to the OnLineReset event
         lineScript.OnLineReset.AddListener(AdjustDuration);
 
-
+        ///_instancedMat.color = colors[1];
+        
+        /* THESE WORK
+        renderer.material.GetColor("_Color");
+        renderer.material.SetColor("_Color", colors[1]);
+        */
 
     }
 
@@ -44,6 +65,52 @@ public class LineController : MonoBehaviour
         {
             // Adjust the duration variable in the target script
             lineScript.duration += durationIncrement;
+        }
+    }
+
+    IEnumerator LerpColors()
+    {
+        while (true)
+        {
+            // Calculate the starting and target colors
+            ///Color startColor = _instancedMat.color;
+
+            Color startColor = renderer.material.GetColor("_Color");
+            Color targetColor = colors[currentIndex];
+
+            // Initialize lerp timer
+            float elapsedTime = 0f;
+
+            // Lerp the color over time
+            while (elapsedTime < colorChangeDuration)
+            {
+                // Calculate lerp ratio
+                float lerp = elapsedTime / colorChangeDuration;
+
+                // Lerp the color
+                Color lerpedColor = Color.Lerp(startColor, targetColor, lerp);
+
+                // Apply the lerped color to the material
+                ///_instancedMat.color = lerpedColor;
+                
+                ///renderer.material.GetColor("_Color");
+                renderer.material.SetColor("_Color", lerpedColor);
+                ///renderer.material.color = Color.Lerp(startColor, targetColor, lerp);
+
+
+                // Update elapsed time
+                elapsedTime += Time.deltaTime;
+
+                // Wait for the end of the frame
+                yield return null;
+            }
+
+            // Ensure the target color is reached
+            ///_instancedMat.color = targetColor;
+            renderer.material.SetColor("_Color", colors[currentIndex]);
+
+            // Move to the next color in the array
+            currentIndex = (currentIndex + 1) % colors.Length;
         }
     }
 
@@ -84,5 +151,5 @@ public class LineController : MonoBehaviour
         GetComponent<Renderer>().material.SetColor("_Color", targetColor);
     }
     */
-  
+
 }
