@@ -699,7 +699,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f34ff297ab920a84297788585522d337, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.85
+  m_Volume: 0.8
   m_Pitch: 0.9
   Loop: 0
   Mute: 0
@@ -707,7 +707,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 5
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -795,7 +795,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: bcf914d0b4fc2cd45999d602910d42e6, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.8
+  m_Volume: 0.85
   m_Pitch: 0.85
   Loop: 0
   Mute: 0
@@ -1086,7 +1086,7 @@ MonoBehaviour:
   backgroundAmbience: {fileID: 142216563}
   bgMusic: {fileID: 142216562}
   shipHum: {fileID: 142216572}
-  shipHums:
+  shipHumSounds:
   - {fileID: 8300000, guid: 2b6a0b8d65f8b084ba2bc05044a3d03d, type: 3}
   - {fileID: 8300000, guid: eb9f4ea4305ac504fa188a6a75b666e0, type: 3}
   - {fileID: 8300000, guid: 3d706858ad0b67744836241908cdbace, type: 3}
@@ -1095,17 +1095,26 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7577bd2579f16b54499bc07b09328210, type: 3}
   fan: {fileID: 142216561}
   hydraulics: {fileID: 142216560}
+  hydraulicsSounds:
+  - {fileID: 8300000, guid: f1fee4064438b5f4d887976dca040d4e, type: 3}
+  - {fileID: 8300000, guid: 952363f2b010cc7449b688b615b0cbea, type: 3}
+  - {fileID: 8300000, guid: 909c687c573b61f409eac99e838abe0d, type: 3}
+  - {fileID: 8300000, guid: f8e8a5c91b2f03a47b8de1f59aceacdf, type: 3}
   thrusters: {fileID: 142216566}
-  minHydraulicsInterval: 20
-  maxHydraulicsInterval: 30
-  minThrustersInterval: 40
-  maxThrustersInterval: 60
-  hydraulicsPlayDuration: 16
-  thrustersPlayDuration: 22
-  endOfSoundWait: 30
-  initialSoundDelay: 30
+  thrustersSounds:
+  - {fileID: 8300000, guid: b0ca61fecfdcaf842a69ab1f62f200ec, type: 3}
+  - {fileID: 8300000, guid: 855f42137c37aaa47aa7db637a0192c0, type: 3}
+  - {fileID: 8300000, guid: bce8f54875cc4494d97c02cb3903db26, type: 3}
+  - {fileID: 8300000, guid: e1dd275c832a4204ba616a1b9f2f9df8, type: 3}
+  minHydraulicsCD: 20
+  maxHydraulicsCD: 35
+  minThrustersCD: 50
+  maxThrustersCD: 87.5
+  endOfSoundWait: 20
+  initialSoundDelay: 20
   hydraulicsCooldown: 0
   thrustersCooldown: 0
+  isSoundPlaying: 0
   linePitchIncrement: 0.005
   linePitchReduction: 0.5
   overallSoundDecreaseDuration: 300
@@ -1147,7 +1156,7 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 5
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -3376,26 +3385,21 @@ MonoBehaviour:
   backgroundAmbience: {fileID: 428735228}
   bgMusic: {fileID: 428735227}
   shipHum: {fileID: 428735218}
-  shipHums:
-  - {fileID: 8300000, guid: 2bcc958f0c887954c9278ae9e3644169, type: 3}
-  - {fileID: 8300000, guid: 28d110e80b525a644b31dc53d2246c70, type: 3}
-  - {fileID: 8300000, guid: e74368e3105698d42bab61c8a1e011ff, type: 3}
-  - {fileID: 8300000, guid: f13c1673d9652154cbbeff3be52000ba, type: 3}
-  - {fileID: 8300000, guid: 913b81ea4e2ffb943b4fd6986cd37a71, type: 3}
-  - {fileID: 8300000, guid: b5058f36e037ba4408d9ec337f12ec70, type: 3}
+  shipHumSounds: []
   fan: {fileID: 0}
   hydraulics: {fileID: 0}
+  hydraulicsSounds: []
   thrusters: {fileID: 0}
-  minHydraulicsInterval: 20
-  maxHydraulicsInterval: 20
-  minThrustersInterval: 20
-  maxThrustersInterval: 20
-  hydraulicsPlayDuration: 12
-  thrustersPlayDuration: 12
+  thrustersSounds: []
+  minHydraulicsCD: 20
+  maxHydraulicsCD: 20
+  minThrustersCD: 20
+  maxThrustersCD: 20
   endOfSoundWait: 30
   initialSoundDelay: 30
   hydraulicsCooldown: 0
   thrustersCooldown: 0
+  isSoundPlaying: 0
   linePitchIncrement: 0.005
   linePitchReduction: 0.5
   overallSoundDecreaseDuration: 300
