@@ -1100,24 +1100,27 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 952363f2b010cc7449b688b615b0cbea, type: 3}
   - {fileID: 8300000, guid: 909c687c573b61f409eac99e838abe0d, type: 3}
   - {fileID: 8300000, guid: f8e8a5c91b2f03a47b8de1f59aceacdf, type: 3}
+  - {fileID: 8300000, guid: ae8be420d228892438ac08324154a9ec, type: 3}
   thrusters: {fileID: 142216566}
   thrustersSounds:
   - {fileID: 8300000, guid: b0ca61fecfdcaf842a69ab1f62f200ec, type: 3}
   - {fileID: 8300000, guid: 855f42137c37aaa47aa7db637a0192c0, type: 3}
-  - {fileID: 8300000, guid: bce8f54875cc4494d97c02cb3903db26, type: 3}
-  - {fileID: 8300000, guid: e1dd275c832a4204ba616a1b9f2f9df8, type: 3}
+  - {fileID: 8300000, guid: 4be4409137c6dc14cacceda4dd795f62, type: 3}
+  - {fileID: 8300000, guid: e762e0030ffb1a94f950a694c1534fc7, type: 3}
+  - {fileID: 8300000, guid: aada55605b7120a4885940833d80de3e, type: 3}
   minHydraulicsCD: 20
   maxHydraulicsCD: 35
   minThrustersCD: 50
   maxThrustersCD: 87.5
+  CDIncreasePercentage: 1.5
   endOfSoundWait: 20
   initialSoundDelay: 20
+  baseSoundDuration: 300
   hydraulicsCooldown: 0
   thrustersCooldown: 0
   isSoundPlaying: 0
   linePitchIncrement: 0.005
   linePitchReduction: 0.5
-  overallSoundDecreaseDuration: 300
   overallSoundDecreasePercentage: 0.5
   overallPitchDecreasePercentage: 0.5
   lineScript: {fileID: 351509928}
@@ -1844,7 +1847,7 @@ MonoBehaviour:
   startColor: {r: 0, g: 0, b: 0, a: 0}
   targetColor: {r: 0, g: 0, b: 0, a: 0}
   colors:
-  - {r: 0.90588236, g: 0.31291524, b: 0, a: 1}
+  - {r: 0.90588236, g: 0.29803923, b: 0.078431375, a: 1}
   totalColorChangeDuration: 300
   colorChangeDuration: 300
   durationIncrement: 0.01
@@ -3395,14 +3398,15 @@ MonoBehaviour:
   maxHydraulicsCD: 20
   minThrustersCD: 20
   maxThrustersCD: 20
+  CDIncreasePercentage: 1.5
   endOfSoundWait: 30
   initialSoundDelay: 30
+  baseSoundDuration: 300
   hydraulicsCooldown: 0
   thrustersCooldown: 0
   isSoundPlaying: 0
   linePitchIncrement: 0.005
   linePitchReduction: 0.5
-  overallSoundDecreaseDuration: 300
   overallSoundDecreasePercentage: 0.5
   overallPitchDecreasePercentage: 0.5
   lineScript: {fileID: 351509928}
