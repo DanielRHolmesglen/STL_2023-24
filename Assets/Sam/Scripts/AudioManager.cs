@@ -22,12 +22,18 @@ public class AudioManager : MonoBehaviour
     public float maxHydraulicsCD = 20f;
     public float minThrustersCD = 20f;
     public float maxThrustersCD = 20f;
+    public float CDIncreasePercentage = 1.5f; // Percentage increase for cooldowns, happens over the base 300 second duration
+    private float hydraulicsIncrement;
+    private float thrustersIncrement;
+    
     ///public float hydraulicsPlayDuration = 12;
     ///public float thrustersPlayDuration = 20;
 
 
     public float endOfSoundWait = 30;
     public float initialSoundDelay = 30f;
+    public float baseSoundDuration = 300f; //used to determine how long volume/pitch decreases go for
+
     public bool hydraulicsCooldown = false;
     public bool thrustersCooldown = false;
     public bool isSoundPlaying = false;
@@ -38,20 +44,18 @@ public class AudioManager : MonoBehaviour
 
 
 
-    //Lowering overall volume
-    public float overallSoundDecreaseDuration = 300f;  // The duration over which to decrease overall volume and pitch
-
     ///public float noiseReductionDelay = 30f; //how long before it starts to reduce sound
     public float overallSoundDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
 
     //slowly decreasing speed/pitch
     ///public float pitchReductionDelay = 30f; //how long before it starts to reduce sound
     public float overallPitchDecreasePercentage = 0.50f; // The total percentage by which to decrease the volume
-    ///public float speedDecreaseDuration = 300f;  // The duration over which to decrease the volume
+                                                         ///public float speedDecreaseDuration = 300f;  // The duration over which to decrease the volume
 
 
     public LineLerp lineScript;
     public LineController lineController;
+
 
 
     /*
@@ -102,11 +106,23 @@ public class AudioManager : MonoBehaviour
     ///public float shipPulseVolumeChangePercentage;
     ///public float shipPulseVolumeChangeInterval;
 
+    private float targetHydraulicsDuration;
+    private float targetThrustersDuration;
+
+
     private void Awake()
     {
-        linePitchIncrement = (linePitchReduction) / overallSoundDecreaseDuration;
+        baseSoundDuration = baseSoundDuration - initialSoundDelay;
 
+        linePitchIncrement = (linePitchReduction) / baseSoundDuration;
 
+        // Calculate the target durations based on the percentage increase
+        targetHydraulicsDuration = maxHydraulicsCD * CDIncreasePercentage;
+        targetThrustersDuration = maxThrustersCD * CDIncreasePercentage;
+        // Calculate the incremental increase per second for each cooldown duration
+        hydraulicsIncrement = (targetHydraulicsDuration - maxHydraulicsCD) / (baseSoundDuration * 2); //baseduration * 2 as the increment happens every 0.5 seconds
+        thrustersIncrement = (targetThrustersDuration - maxThrustersCD) / (baseSoundDuration * 2);
+        Debug.Log("Hydraulic increment = " + hydraulicsIncrement);
     }
 
 
@@ -376,6 +392,12 @@ public class AudioManager : MonoBehaviour
 
     IEnumerator SoundManager()
     {
+        float initialHydraulicsCD = minHydraulicsCD;
+        float initialThrustersCD = minThrustersCD;
+        float initialMaxHydraulicsCD = maxHydraulicsCD;
+        float initialMaxThrustersCD = maxThrustersCD;
+
+
         while (true)
         {
             // Play thrusters sound if not on cooldown
@@ -388,13 +410,31 @@ public class AudioManager : MonoBehaviour
             {
                 StartCoroutine(PlayThrusters());
             }
-           
 
+            
             // Wait for a short duration before looping again
             yield return new WaitForSeconds(0.5f);
+
+            if (maxHydraulicsCD < targetHydraulicsDuration)
+            {
+                // Increment cooldowns
+                maxHydraulicsCD += hydraulicsIncrement;
+                minHydraulicsCD += hydraulicsIncrement;
+                maxThrustersCD += thrustersIncrement;
+                minThrustersCD += thrustersIncrement;
+            }
+            
         }
     }
 
+    private void UpdateCooldowns(float newHydraulicsCD, float newThrustersCD, float newMaxHydraulicsCD, float newMaxThrustersCD)
+    {
+        // Update cooldowns for hydraulics and thrusters
+        minHydraulicsCD = newHydraulicsCD;
+        minThrustersCD = newThrustersCD;
+        maxHydraulicsCD = newMaxHydraulicsCD;
+        maxThrustersCD = newMaxThrustersCD;
+    }
 
     IEnumerator PlayHydraulics()
     {
@@ -421,6 +461,7 @@ public class AudioManager : MonoBehaviour
         // Calculate cooldown duration for hydraulics and then wait for that time
         float hydraulicsCooldownDuration = Random.Range(minHydraulicsCD, maxHydraulicsCD);
         yield return new WaitForSeconds(hydraulicsCooldownDuration);
+
 
         //turn off this sounds cooldown so it can be played again (if nothing else is playing)
         hydraulicsCooldown = false;
@@ -558,9 +599,9 @@ public class AudioManager : MonoBehaviour
 
         float startTime = Time.time;
 
-        while (Time.time - startTime < overallSoundDecreaseDuration)
+        while (Time.time - startTime < baseSoundDuration)
         {
-            float t = (Time.time - startTime) / overallSoundDecreaseDuration;
+            float t = (Time.time - startTime) / baseSoundDuration;
             audioSource.volume = Mathf.Lerp(startVolume, targetVolume, t);
             yield return null;
         }
@@ -576,9 +617,9 @@ public class AudioManager : MonoBehaviour
 
         float startTime = Time.time;
 
-        while (Time.time - startTime < overallSoundDecreaseDuration)
+        while (Time.time - startTime < baseSoundDuration)
         {
-            float t = (Time.time - startTime) / overallSoundDecreaseDuration;
+            float t = (Time.time - startTime) / baseSoundDuration;
             audioSource.pitch = Mathf.Lerp(startPitch, targetPitch, t);
             yield return null;
         }
