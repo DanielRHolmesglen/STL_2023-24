@@ -1103,11 +1103,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ae8be420d228892438ac08324154a9ec, type: 3}
   thrusters: {fileID: 142216566}
   thrustersSounds:
-  - {fileID: 8300000, guid: b0ca61fecfdcaf842a69ab1f62f200ec, type: 3}
-  - {fileID: 8300000, guid: 855f42137c37aaa47aa7db637a0192c0, type: 3}
-  - {fileID: 8300000, guid: 4be4409137c6dc14cacceda4dd795f62, type: 3}
-  - {fileID: 8300000, guid: e762e0030ffb1a94f950a694c1534fc7, type: 3}
-  - {fileID: 8300000, guid: aada55605b7120a4885940833d80de3e, type: 3}
+  - {fileID: 8300000, guid: cafaff66541840b499ceaf61d8fac1da, type: 3}
+  - {fileID: 8300000, guid: b61ab9704fe9b414fbbf83f156b8ff7c, type: 3}
+  - {fileID: 8300000, guid: 674bff757fb07524a94bd34fb3501eb2, type: 3}
+  - {fileID: 8300000, guid: 60b640b953d5d9649ada0b6a18790748, type: 3}
+  - {fileID: 8300000, guid: 41bba00f34b097742a5cf1f1b8eacda7, type: 3}
   minHydraulicsCD: 20
   maxHydraulicsCD: 35
   minThrustersCD: 50
@@ -3786,14 +3786,16 @@ MonoBehaviour:
   introSequenceUI: {fileID: 840486373}
   introText: {fileID: 486499238}
   introTexts:
-  - Welcome. Initialising.
-  - 'It''s time to rest your weary body as you continue on your journey though deep
-    space.  '
-  - 'You are perfectly safe, there is nothing you need to do aside from rest as you
-    drift through the cosmos.  '
-  - 'You may notice sounds and lights. These are just routine functions of the ship,
-    there is nothing to fear. Now please, close your eyes. '
-  textDisplayDuration: 6
+  - "Welcome to Sleepy Starship\u2026 "
+  - 'You are floating through deep space on a luxurious journey to a distant planetary
+    system. '
+  - 'After a long day it is time to rest. You may notice some sounds and lights; these
+    are just routine functions of the ship which has a perfect safety record. '
+  - 'There is nothing you need to do aside from close your eyes, sleep and dream of
+    the new worlds which await you as the ship cocoons you on your journey through
+    the cosmos. '
+  - Now close your eyes
+  textDisplayDuration: 7
   introImages:
   - {fileID: 1795542900}
   introSounds: []
@@ -4854,6 +4856,85 @@ Transform:
   m_Father: {fileID: 1503724591}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1252243248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1252243249}
+  - component: {fileID: 1252243250}
+  m_Layer: 0
+  m_Name: Sleepy Starship Intro image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1252243249
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252243248}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.05, y: 0.029029353, z: -1.06}
+  m_LocalScale: {x: 0.8201902, y: 0.8305723, z: 1.6611446}
+  m_Children: []
+  m_Father: {fileID: 1795542901}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1252243250
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1252243248}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 388b050341a8e434c8a56613724cfd2a, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 17.92, y: 10.24}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &1286084280
 GameObject:
   m_ObjectHideFlags: 0
@@ -6031,6 +6112,7 @@ Transform:
   m_Children:
   - {fileID: 590154437}
   - {fileID: 989092868}
+  - {fileID: 1252243249}
   m_Father: {fileID: 507516838}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
