@@ -699,7 +699,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f34ff297ab920a84297788585522d337, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.8
+  m_Volume: 0.75
   m_Pitch: 0.9
   Loop: 0
   Mute: 0
@@ -1103,11 +1103,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ae8be420d228892438ac08324154a9ec, type: 3}
   thrusters: {fileID: 142216566}
   thrustersSounds:
-  - {fileID: 8300000, guid: cafaff66541840b499ceaf61d8fac1da, type: 3}
-  - {fileID: 8300000, guid: b61ab9704fe9b414fbbf83f156b8ff7c, type: 3}
-  - {fileID: 8300000, guid: 674bff757fb07524a94bd34fb3501eb2, type: 3}
-  - {fileID: 8300000, guid: 60b640b953d5d9649ada0b6a18790748, type: 3}
-  - {fileID: 8300000, guid: 41bba00f34b097742a5cf1f1b8eacda7, type: 3}
+  - {fileID: 8300000, guid: 741eac3d812f2e64eb802c269474ed09, type: 3}
+  - {fileID: 8300000, guid: e5984257a3fa75c4695397fbd253ef29, type: 3}
+  - {fileID: 8300000, guid: d1c10507d38d1b647ad0df9797c53c30, type: 3}
+  - {fileID: 8300000, guid: a23680f4294fbe34b8e846128206a8c0, type: 3}
+  - {fileID: 8300000, guid: 768414521daf93c4a9279123819c8301, type: 3}
   minHydraulicsCD: 20
   maxHydraulicsCD: 35
   minThrustersCD: 50
@@ -1151,8 +1151,8 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: b0ca61fecfdcaf842a69ab1f62f200ec, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.85
-  m_Pitch: 1
+  m_Volume: 0.8
+  m_Pitch: 0.9
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -1847,7 +1847,7 @@ MonoBehaviour:
   startColor: {r: 0, g: 0, b: 0, a: 0}
   targetColor: {r: 0, g: 0, b: 0, a: 0}
   colors:
-  - {r: 0.90588236, g: 0.29803923, b: 0.078431375, a: 1}
+  - {r: 1, g: 0.29803923, b: 0.08235294, a: 1}
   totalColorChangeDuration: 300
   colorChangeDuration: 300
   durationIncrement: 0.01

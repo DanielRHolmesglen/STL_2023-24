@@ -664,8 +664,8 @@ public class AudioManager : MonoBehaviour
         StartCoroutine(DecreasePitchOverTime(bgMusic, overallPitchDecreasePercentage));
 
         StartCoroutine(DecreasePitchOverTime(fan, 0.2f));
-        StartCoroutine(DecreasePitchOverTime(hydraulics, overallPitchDecreasePercentage));
-        StartCoroutine(DecreasePitchOverTime(thrusters, overallPitchDecreasePercentage));
+        StartCoroutine(DecreasePitchOverTime(hydraulics, 0.4f));
+        StartCoroutine(DecreasePitchOverTime(thrusters, 0.4f));
 
 
         /*
