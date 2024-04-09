@@ -1103,11 +1103,11 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ae8be420d228892438ac08324154a9ec, type: 3}
   thrusters: {fileID: 142216566}
   thrustersSounds:
-  - {fileID: 8300000, guid: 741eac3d812f2e64eb802c269474ed09, type: 3}
-  - {fileID: 8300000, guid: e5984257a3fa75c4695397fbd253ef29, type: 3}
-  - {fileID: 8300000, guid: d1c10507d38d1b647ad0df9797c53c30, type: 3}
-  - {fileID: 8300000, guid: a23680f4294fbe34b8e846128206a8c0, type: 3}
-  - {fileID: 8300000, guid: 768414521daf93c4a9279123819c8301, type: 3}
+  - {fileID: 8300000, guid: 79389723f6533d5428cc032f938150db, type: 3}
+  - {fileID: 8300000, guid: 470903474b543354a96d7ec223a6d5c7, type: 3}
+  - {fileID: 8300000, guid: 690c1d1b1713ddf49a6a93cd306e1b59, type: 3}
+  - {fileID: 8300000, guid: e82836baf67e502458b74543f2ff8e46, type: 3}
+  - {fileID: 8300000, guid: 8ce453db20b428d488d70a7e09f35e6a, type: 3}
   minHydraulicsCD: 20
   maxHydraulicsCD: 35
   minThrustersCD: 50

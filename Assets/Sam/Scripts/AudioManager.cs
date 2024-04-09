@@ -451,7 +451,7 @@ public class AudioManager : MonoBehaviour
 
         // Get the duration of the sound clip then wait for that duration
         float hydraulicsClipDuration = randomSound.length;
-        yield return new WaitForSeconds(hydraulicsClipDuration);
+        yield return new WaitForSeconds(hydraulicsClipDuration + 0.5f);
         hydraulics.Stop(); //let other sounds be played again
 
         //allow for a repreive before letting other sounds play
@@ -483,7 +483,7 @@ public class AudioManager : MonoBehaviour
 
         // Get the duration of the sound clip then wait for that duration     
         float thrustersClipDuration = randomSound.length;
-        yield return new WaitForSeconds(thrustersClipDuration);
+        yield return new WaitForSeconds(thrustersClipDuration + 0.5f);
         thrusters.Stop();  // Stop the thrusters sound
 
         //allow for a repreive before letting other sounds play
