@@ -8,12 +8,11 @@ public class LineLerp : MonoBehaviour
 {
 
     //MOVEMENT LERP PARAMETERS
-
     public GameObject endPositionEmpty;
     public GameObject startPositionEmpty;
     private Vector3 endPosition;
     private Vector3 startPosition;
-    public float duration = 2.000f; //time between point A and B
+    public float duration = 2.000f; //duration of movement between poin A and B
     private float elapsedTime;
     Renderer lineMat;
     ///public GameObject centerEye;
@@ -36,13 +35,13 @@ public class LineLerp : MonoBehaviour
     private Color endColor;
 
 
-    public UnityEvent OnLineReset;
+    public UnityEvent OnLineReset; //used by audio and linecontroller to do things each time the line completes a 'run'
 
 
 
     void Start()
     {
-        startPosition = startPositionEmpty.transform.position; //it's own position (empty game object)
+        startPosition = startPositionEmpty.transform.position; //its own position (empty game object)
         endPosition = endPositionEmpty.transform.position; //empty game object end pos
         lineMat = GetComponent<Renderer>();
 
@@ -77,7 +76,29 @@ public class LineLerp : MonoBehaviour
         }
     }
 
+    
 
+    //RESETTING ALL THE PARAMETERS FOR LINE TO START AGAIN
+    private void Resetting() 
+    {
+        //updating the start and end positions
+        startPosition = startPositionEmpty.transform.position;
+        endPosition = endPositionEmpty.transform.position;
+
+        //turning off line, then moving its position back to start/resetting timer, then turning it back on
+        lineMat.enabled = false;
+        transform.position = startPosition;
+        elapsedTime = 0;
+        lineMat.enabled = true;
+
+       
+        //invoking event so other scripts (AKA sound) can register this
+        OnLineReset.Invoke();
+
+    }
+
+
+    /// Unused colour and fading out logic
     /*void LerpAlpha()
     {
         lerpParam += Time.deltaTime;
@@ -117,24 +138,4 @@ public class LineLerp : MonoBehaviour
 
         Color.Lerp(startColor, endColor, amountComplete);       
     }*/
-
-    //RESETTING ALL THE PARAMETERS FOR LINE TO START AGAIN
-    private void Resetting() 
-    {
-        //updating the start and end positions
-        startPosition = startPositionEmpty.transform.position;
-        endPosition = endPositionEmpty.transform.position;
-
-        //turning off line, then moving its position back to start/resetting timer, then turning it back on
-        lineMat.enabled = false;
-        transform.position = startPosition;
-        elapsedTime = 0;
-        lineMat.enabled = true;
-
-       
-        //invoking event so other scripts (AKA sound) can register this
-        OnLineReset.Invoke();
-
-    }
-
 }

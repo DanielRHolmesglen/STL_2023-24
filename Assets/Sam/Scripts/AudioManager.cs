@@ -23,7 +23,7 @@ public class AudioManager : MonoBehaviour
     public float minThrustersCD = 20f;
     public float maxThrustersCD = 20f;
     public float CDIncreasePercentage = 1.5f; // Percentage increase for cooldowns, happens over the base 300 second duration
-    private float hydraulicsIncrement;
+    private float hydraulicsIncrement; //used to gradually increase cooldowns over the experience
     private float thrustersIncrement;
     
     ///public float hydraulicsPlayDuration = 12;
@@ -113,16 +113,17 @@ public class AudioManager : MonoBehaviour
     private void Awake()
     {
         baseSoundDuration = baseSoundDuration - initialSoundDelay;
-
         linePitchIncrement = (linePitchReduction) / baseSoundDuration;
 
         // Calculate the target durations based on the percentage increase
         targetHydraulicsDuration = maxHydraulicsCD * CDIncreasePercentage;
         targetThrustersDuration = maxThrustersCD * CDIncreasePercentage;
+   
         // Calculate the incremental increase per second for each cooldown duration
         hydraulicsIncrement = (targetHydraulicsDuration - maxHydraulicsCD) / (baseSoundDuration * 2); //baseduration * 2 as the increment happens every 0.5 seconds
         thrustersIncrement = (targetThrustersDuration - maxThrustersCD) / (baseSoundDuration * 2);
         Debug.Log("Hydraulic increment = " + hydraulicsIncrement);
+
     }
 
 
@@ -209,7 +210,208 @@ public class AudioManager : MonoBehaviour
     }
 
 
-    ///---------------------------------------
+
+    IEnumerator SoundManager()
+    {
+        float initialHydraulicsCD = minHydraulicsCD;
+        float initialThrustersCD = minThrustersCD;
+        float initialMaxHydraulicsCD = maxHydraulicsCD;
+        float initialMaxThrustersCD = maxThrustersCD;
+
+
+        while (true)
+        {
+            // Play thrusters sound if not on cooldown
+            if (!hydraulicsCooldown && !isSoundPlaying)
+            {
+                StartCoroutine(PlayHydraulics());
+
+            }
+            else if (!thrustersCooldown && !isSoundPlaying)
+            {
+                StartCoroutine(PlayThrusters());
+            }
+
+            
+            // Wait for a short duration before looping again
+            yield return new WaitForSeconds(0.5f);
+
+            if (maxHydraulicsCD < targetHydraulicsDuration)
+            {
+                // Increment cooldowns
+                maxHydraulicsCD += hydraulicsIncrement;
+                minHydraulicsCD += hydraulicsIncrement;
+                maxThrustersCD += thrustersIncrement;
+                minThrustersCD += thrustersIncrement;
+            }
+            
+        }
+    }
+
+    private void UpdateCooldowns(float newHydraulicsCD, float newThrustersCD, float newMaxHydraulicsCD, float newMaxThrustersCD)
+    {
+        // Update cooldowns for hydraulics and thrusters
+        minHydraulicsCD = newHydraulicsCD;
+        minThrustersCD = newThrustersCD;
+        maxHydraulicsCD = newMaxHydraulicsCD;
+        maxThrustersCD = newMaxThrustersCD;
+    }
+
+    IEnumerator PlayHydraulics()
+    {
+        // Start hydraulics cooldown and turn on 'sound playing' flag
+        hydraulicsCooldown = true;
+        isSoundPlaying = true;
+
+
+        // Select a random sound from the hydraulics array
+        int randomIndex = Random.Range(0, hydraulicsSounds.Length);
+        AudioClip randomSound = hydraulicsSounds[randomIndex];
+        hydraulics.clip = randomSound;
+        hydraulics.Play();
+
+        // Get the duration of the sound clip then wait for that duration
+        float hydraulicsClipDuration = randomSound.length;
+        yield return new WaitForSeconds(hydraulicsClipDuration + 0.5f);
+        hydraulics.Stop(); 
+
+        //allow for a repreive before letting other sounds play
+        yield return new WaitForSeconds(endOfSoundWait);
+        isSoundPlaying = false; //let other sounds be played again
+
+        // Calculate cooldown duration for hydraulics and then wait for that time
+        float hydraulicsCooldownDuration = Random.Range(minHydraulicsCD, maxHydraulicsCD);
+        yield return new WaitForSeconds(hydraulicsCooldownDuration);
+
+
+        //turn off this sounds cooldown so it can be played again (if nothing else is playing)
+        hydraulicsCooldown = false;
+
+    }
+
+
+    IEnumerator PlayThrusters()
+    {
+        // Start thrusters cooldown and turn on 'sound playing' flag
+        thrustersCooldown = true;
+        isSoundPlaying = true;
+
+        // Select a random sound from the thrusters array
+        int randomIndex = Random.Range(0, thrustersSounds.Length);
+        AudioClip randomSound = thrustersSounds[randomIndex];
+        thrusters.clip = randomSound;
+        thrusters.Play();
+
+        // Get the duration of the sound clip then wait for that duration     
+        float thrustersClipDuration = randomSound.length;
+        yield return new WaitForSeconds(thrustersClipDuration + 0.5f);
+        thrusters.Stop(); 
+
+        //allow for a repreive before letting other sounds play
+        yield return new WaitForSeconds(endOfSoundWait);
+        isSoundPlaying = false; //let other sounds be played again
+
+        // Calculate cooldown duration for thrusters and wait for that amount
+        float thrustersCooldownDuration = Random.Range(minThrustersCD, maxThrustersCD);
+        yield return new WaitForSeconds(thrustersCooldownDuration);
+
+        // End thrusters cooldown and turn off 'sound playing' flag to let other sounds be played
+        thrustersCooldown = false;
+        
+    }
+    
+
+    IEnumerator DecreaseVolumeOverTime(AudioSource audioSource)
+    {
+        float startVolume = audioSource.volume;
+        float targetVolume = startVolume * (1.0f - overallSoundDecreasePercentage);
+
+        float startTime = Time.time;
+
+        while (Time.time - startTime < baseSoundDuration)
+        {
+            float t = (Time.time - startTime) / baseSoundDuration;
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, t);
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
+    }
+
+    
+    IEnumerator DecreasePitchOverTime(AudioSource audioSource, float pitchDecrease)
+    {
+        float startPitch = audioSource.pitch;
+        float targetPitch = startPitch * (1.0f - pitchDecrease);
+
+        float startTime = Time.time;
+
+        while (Time.time - startTime < baseSoundDuration)
+        {
+            float t = (Time.time - startTime) / baseSoundDuration;
+            audioSource.pitch = Mathf.Lerp(startPitch, targetPitch, t);
+            yield return null;
+        }
+
+        audioSource.pitch = targetPitch;
+    }
+
+
+    //Decrease volume of X over BaseSoundDuration seconds by overallSoundDecreasePercentage%. 
+    private IEnumerator ManageAudioVolumes()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        StartCoroutine(DecreaseVolumeOverTime(backgroundAmbience));
+        StartCoroutine(DecreaseVolumeOverTime(bgMusic));
+
+        StartCoroutine(DecreaseVolumeOverTime(fan));
+        StartCoroutine(DecreaseVolumeOverTime(shipHum));
+
+        StartCoroutine(DecreaseVolumeOverTime(hydraulics));
+        StartCoroutine(DecreaseVolumeOverTime(thrusters));
+
+
+        /*
+        StartCoroutine(DecreaseVolumeOverTime(doorOpen));
+        StartCoroutine(DecreaseVolumeOverTime(footsteps));
+        StartCoroutine(DecreaseVolumeOverTime(chatter));
+        StartCoroutine(DecreaseVolumeOverTime(lifeSupport));
+        StartCoroutine(DecreaseVolumeOverTime(radar));
+        StartCoroutine(DecreaseVolumeOverTime(music));
+        StartCoroutine(DecreaseVolumeOverTime(shower));
+        */
+
+    }
+
+    //decrease pitch of X over BaseSoundDuration seconds by Y%. Is generic "overallPitchDecreasePercentage" for most, some have specific amounts as requested.
+    private IEnumerator ManageAudioPitches()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        StartCoroutine(DecreasePitchOverTime(backgroundAmbience, overallPitchDecreasePercentage));
+        StartCoroutine(DecreasePitchOverTime(bgMusic, overallPitchDecreasePercentage));
+
+        StartCoroutine(DecreasePitchOverTime(fan, 0.2f));
+        StartCoroutine(DecreasePitchOverTime(hydraulics, 0.4f));
+        StartCoroutine(DecreasePitchOverTime(thrusters, 0.4f));
+
+
+        /*
+        StartCoroutine(DecreaseVolumeOverTime(doorOpen));
+        StartCoroutine(DecreaseVolumeOverTime(footsteps));
+        StartCoroutine(DecreaseVolumeOverTime(chatter));
+        StartCoroutine(DecreaseVolumeOverTime(lifeSupport));
+        StartCoroutine(DecreaseVolumeOverTime(radar));
+        StartCoroutine(DecreaseVolumeOverTime(music));
+        StartCoroutine(DecreaseVolumeOverTime(shower));
+        */
+
+    }
+
+
+
+    ///--------------------------------------- UNUSED CODE FOR ADDITIONAL SOUNDS
 
     /*
     IEnumerator PlayDoorOpening()
@@ -389,295 +591,4 @@ public class AudioManager : MonoBehaviour
         }
     }
     */
-
-    IEnumerator SoundManager()
-    {
-        float initialHydraulicsCD = minHydraulicsCD;
-        float initialThrustersCD = minThrustersCD;
-        float initialMaxHydraulicsCD = maxHydraulicsCD;
-        float initialMaxThrustersCD = maxThrustersCD;
-
-
-        while (true)
-        {
-            // Play thrusters sound if not on cooldown
-            if (!hydraulicsCooldown && !isSoundPlaying)
-            {
-                StartCoroutine(PlayHydraulics());
-
-            }
-            else if (!thrustersCooldown && !isSoundPlaying)
-            {
-                StartCoroutine(PlayThrusters());
-            }
-
-            
-            // Wait for a short duration before looping again
-            yield return new WaitForSeconds(0.5f);
-
-            if (maxHydraulicsCD < targetHydraulicsDuration)
-            {
-                // Increment cooldowns
-                maxHydraulicsCD += hydraulicsIncrement;
-                minHydraulicsCD += hydraulicsIncrement;
-                maxThrustersCD += thrustersIncrement;
-                minThrustersCD += thrustersIncrement;
-            }
-            
-        }
-    }
-
-    private void UpdateCooldowns(float newHydraulicsCD, float newThrustersCD, float newMaxHydraulicsCD, float newMaxThrustersCD)
-    {
-        // Update cooldowns for hydraulics and thrusters
-        minHydraulicsCD = newHydraulicsCD;
-        minThrustersCD = newThrustersCD;
-        maxHydraulicsCD = newMaxHydraulicsCD;
-        maxThrustersCD = newMaxThrustersCD;
-    }
-
-    IEnumerator PlayHydraulics()
-    {
-        // Start hydraulics cooldown and turn on 'sound playing' flag
-        hydraulicsCooldown = true;
-        isSoundPlaying = true;
-
-
-        // Select a random sound from the hydraulics array
-        int randomIndex = Random.Range(0, hydraulicsSounds.Length);
-        AudioClip randomSound = hydraulicsSounds[randomIndex];
-        hydraulics.clip = randomSound;
-        hydraulics.Play();
-
-        // Get the duration of the sound clip then wait for that duration
-        float hydraulicsClipDuration = randomSound.length;
-        yield return new WaitForSeconds(hydraulicsClipDuration + 0.5f);
-        hydraulics.Stop(); //let other sounds be played again
-
-        //allow for a repreive before letting other sounds play
-        yield return new WaitForSeconds(endOfSoundWait);
-        isSoundPlaying = false; //let other sounds be played again
-
-        // Calculate cooldown duration for hydraulics and then wait for that time
-        float hydraulicsCooldownDuration = Random.Range(minHydraulicsCD, maxHydraulicsCD);
-        yield return new WaitForSeconds(hydraulicsCooldownDuration);
-
-
-        //turn off this sounds cooldown so it can be played again (if nothing else is playing)
-        hydraulicsCooldown = false;
-
-    }
-
-
-    IEnumerator PlayThrusters()
-    {
-        // Start thrusters cooldown and turn on 'sound playing' flag
-        thrustersCooldown = true;
-        isSoundPlaying = true;
-
-        // Select a random sound from the thrusters array
-        int randomIndex = Random.Range(0, thrustersSounds.Length);
-        AudioClip randomSound = thrustersSounds[randomIndex];
-        thrusters.clip = randomSound;
-        thrusters.Play();
-
-        // Get the duration of the sound clip then wait for that duration     
-        float thrustersClipDuration = randomSound.length;
-        yield return new WaitForSeconds(thrustersClipDuration + 0.5f);
-        thrusters.Stop();  // Stop the thrusters sound
-
-        //allow for a repreive before letting other sounds play
-        yield return new WaitForSeconds(endOfSoundWait);
-        isSoundPlaying = false; //let other sounds be played again
-
-        // Calculate cooldown duration for thrusters and wait for that amount
-        float thrustersCooldownDuration = Random.Range(minThrustersCD, maxThrustersCD);
-        yield return new WaitForSeconds(thrustersCooldownDuration);
-
-        // End thrusters cooldown and turn off 'sound playing' flag to let other sounds be played
-        thrustersCooldown = false;
-        
-    }
-
-    /*
-    IEnumerator PlayHydraulics()
-    {
-        while (true)
-        {
-            if (!hydraulicsCooldown && !thrustersCooldown)
-            {
-                //start cooldown (to stop overlapping)
-                hydraulicsCooldown = true;
-                //select sound from array and play it
-                int randomIndex = Random.Range(0, hydraulicsSounds.Length - 1);
-                AudioClip randomSound = hydraulicsSounds[randomIndex];
-                hydraulics.clip = randomSound;
-                hydraulics.Play();
-
-                //Lets the sound play for its duration
-                float hydraulicsClipDuration = hydraulics.clip.length;
-                Debug.Log("Hydraulics Clip Duration: " + hydraulicsClipDuration);
-                yield return new WaitForSeconds(hydraulicsClipDuration);
-                hydraulics.Stop();
-
-                //cooldown duration, accounting for how long the clip played for 
-                maxHydraulicsGlobalCD = maxHydraulicsGlobalCD - hydraulicsClipDuration;
-                float interval = Random.Range(minHydraulicsGlobalCD, maxHydraulicsGlobalCD);
-                Debug.Log("Adjusted Max Hydraulics Interval: " + maxHydraulicsGlobalCD);
-                Debug.Log("Generated Interval: " + interval);
-                yield return new WaitForSeconds(interval);
-
-                //turn off cooldown bool. Lets other sounds have a go before it tries to play again.
-                hydraulicsCooldown = false;
-
-                //generic wait amount so sounds cant immidiately start again. However is done after resetting bool to give other sounds a chance to play.
-                yield return new WaitForSeconds(endOfSoundWait);
-
-              
-
-            }
-            else
-            {
-                // If on cooldown, wait for a short duration before checking again
-                yield return new WaitForSeconds(0.5f);
-            }
-
-        }
-
-
-    }
-
-   
-
-    IEnumerator PlayThrusters()
-    {
-        while (true)
-        {
-            if (!hydraulicsCooldown && !thrustersCooldown)
-            {
-                //start cooldown (to stop overlapping)
-                thrustersCooldown = true;
-                //select sound from array then play
-                int randomIndex = Random.Range(0, thrustersSounds.Length - 1);
-                AudioClip randomSound = thrustersSounds[randomIndex];
-                thrusters.clip = randomSound;
-                thrusters.Play();
-
-                //Lets the sound play for its duration
-                float thrustersClipDuration = hydraulics.clip.length;
-                yield return new WaitForSeconds(thrustersClipDuration);
-                thrusters.Stop();
-
-                //cooldown duration
-                float maxIntervalAdjusted = maxThrustersGlobalCD - thrustersClipDuration;
-                float interval = Random.Range(minThrustersGlobalCD, maxThrustersGlobalCD);
-                yield return new WaitForSeconds(interval);
-
-                //turn off cooldown bool. Lets other sounds have a go before it tries to play again.
-                thrustersCooldown = false;
-
-                //generic wait amount so sounds aren't constantly playing
-                yield return new WaitForSeconds(endOfSoundWait);
-
-
-            }
-            else
-            {
-                // If on cooldown, wait for a short duration before checking again
-                yield return new WaitForSeconds(0.5f);
-            }
-
-        }
-
-    }
-    */
-
-    IEnumerator DecreaseVolumeOverTime(AudioSource audioSource)
-    {
-        float startVolume = audioSource.volume;
-        float targetVolume = startVolume * (1.0f - overallSoundDecreasePercentage);
-
-        float startTime = Time.time;
-
-        while (Time.time - startTime < baseSoundDuration)
-        {
-            float t = (Time.time - startTime) / baseSoundDuration;
-            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, t);
-            yield return null;
-        }
-
-        audioSource.volume = targetVolume;
-    }
-
-    
-    IEnumerator DecreasePitchOverTime(AudioSource audioSource, float pitchDecrease)
-    {
-        float startPitch = audioSource.pitch;
-        float targetPitch = startPitch * (1.0f - pitchDecrease);
-
-        float startTime = Time.time;
-
-        while (Time.time - startTime < baseSoundDuration)
-        {
-            float t = (Time.time - startTime) / baseSoundDuration;
-            audioSource.pitch = Mathf.Lerp(startPitch, targetPitch, t);
-            yield return null;
-        }
-
-        audioSource.pitch = targetPitch;
-    }
-
-
-
-    private IEnumerator ManageAudioVolumes()
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        StartCoroutine(DecreaseVolumeOverTime(backgroundAmbience));
-        StartCoroutine(DecreaseVolumeOverTime(bgMusic));
-
-        StartCoroutine(DecreaseVolumeOverTime(fan));
-        StartCoroutine(DecreaseVolumeOverTime(shipHum));
-
-        StartCoroutine(DecreaseVolumeOverTime(hydraulics));
-        StartCoroutine(DecreaseVolumeOverTime(thrusters));
-
-
-        /*
-        StartCoroutine(DecreaseVolumeOverTime(doorOpen));
-        StartCoroutine(DecreaseVolumeOverTime(footsteps));
-        StartCoroutine(DecreaseVolumeOverTime(chatter));
-        StartCoroutine(DecreaseVolumeOverTime(lifeSupport));
-        StartCoroutine(DecreaseVolumeOverTime(radar));
-        StartCoroutine(DecreaseVolumeOverTime(music));
-        StartCoroutine(DecreaseVolumeOverTime(shower));
-        */
-
-    }
-
-
-    private IEnumerator ManageAudioPitches()
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        StartCoroutine(DecreasePitchOverTime(backgroundAmbience, overallPitchDecreasePercentage));
-        StartCoroutine(DecreasePitchOverTime(bgMusic, overallPitchDecreasePercentage));
-
-        StartCoroutine(DecreasePitchOverTime(fan, 0.2f));
-        StartCoroutine(DecreasePitchOverTime(hydraulics, 0.4f));
-        StartCoroutine(DecreasePitchOverTime(thrusters, 0.4f));
-
-
-        /*
-        StartCoroutine(DecreaseVolumeOverTime(doorOpen));
-        StartCoroutine(DecreaseVolumeOverTime(footsteps));
-        StartCoroutine(DecreaseVolumeOverTime(chatter));
-        StartCoroutine(DecreaseVolumeOverTime(lifeSupport));
-        StartCoroutine(DecreaseVolumeOverTime(radar));
-        StartCoroutine(DecreaseVolumeOverTime(music));
-        StartCoroutine(DecreaseVolumeOverTime(shower));
-        */
-
-    }
-
 }

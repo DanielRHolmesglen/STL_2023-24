@@ -10,16 +10,16 @@ public class GameManager : MonoBehaviour
 {
 
     public GameObject introSequenceUI;
-    public Text introText;
+    public Text introText; //refernce to change the text
 
     public string[] introTexts; // Array of predetermined texts
     private int currentIndex = 0; // Index of the current text being displayed
     public float textDisplayDuration = 7f; // Duration to display each text
 
-    public GameObject[] introImages;
-    public AudioSource[] introSounds;
-    public GameObject audioManagerObject; 
-    public GameObject movingLine;
+    public GameObject[] introImages; //UNUSED 
+    //public AudioSource[] introSounds;  UNUSED
+    public GameObject audioManagerObject; //reference to turn it on when intro is over
+    public GameObject movingLine; //reference to turn it on when intro is over
 
     private bool introSkipped = false;
 
@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
         // Start the intro sequence
         StartCoroutine(StartIntroSequence());
         ///StartCoroutine(Images());
-        
+
         StartCoroutine(DisplayTexts());
 
 
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-    
+
         var input = VRDevice.Device.PrimaryInputDevice; //setting up vr device. IS PRIMARY/RIGHT HAND.
 
         if (!introSkipped && input.GetButtonDown(VRButton.Primary) || !introSkipped && Input.GetMouseButtonDown(0)) //Checking every frame if button is being pressed
@@ -47,26 +47,6 @@ public class GameManager : MonoBehaviour
 
         }
 
-        /*
-        if (!introSkipped && input.GetButtonDown(VRButton.Primary) || !introSkipped && Input.GetMouseButtonDown(0)) //Checking every frame if button is being pressed
-        {
-            introSkipped = true;
-
-            StopCoroutine(DisplayTexts());
-            if (currentIndex == introTexts.Length - 1)
-            {
-                EndIntroSequence();
-                StopCoroutine(DisplayTexts());
-            }
-            else
-            {
-                currentIndex = (currentIndex + 1) % introTexts.Length;
-            }
-            StartCoroutine(DisplayTexts());
-
-            introSkipped = false;
-        }
-        */
 
 
     }
@@ -102,24 +82,12 @@ public class GameManager : MonoBehaviour
         introSequenceUI.SetActive(true);
         introImages[0].gameObject.SetActive(true);
         ///introText.text = "Welcome. Press A to skip the induction or right trigger to skip a step";
-        
+
         //waiting for the (I think) total time the intro should take if nothing is skipped.
         yield return new WaitForSeconds(textDisplayDuration * (introTexts.Length));
 
-      
 
-        /*
-        introImages[1].gameObject.SetActive(true);
-        introText.text = "Evening, astronaut. I know your day was draining and that you are preparing to rest. I'm conducting a final checkup to make sure you are comfortable.";
-        yield return new WaitForSeconds(7f);
 
-        introText.text = "You may notice various lights and sounds throughout the ship as it continues its operations. These are routine functions of our vessel, ensuring your safety and comfort";
-        yield return new WaitForSeconds(7f);
-
-        introText.text = "Should you require any assistance, press home for the menu. Now, please close your eyes for this experience and relax, knowing you are safe. Good night astronaut.";
-        yield return new WaitForSeconds(7f);
-        introImages[1].gameObject.SetActive(false);
-        */
     }
 
     void EndIntroSequence()
@@ -137,6 +105,7 @@ public class GameManager : MonoBehaviour
         movingLine.SetActive(true);
     }
 
+    /// UNUSED INTRO SKIP EACH SLIDE 
     /*
     IEnumerator Images()
     {
@@ -150,5 +119,41 @@ public class GameManager : MonoBehaviour
         }
 
     }
+    */
+
+
+    /*
+    if (!introSkipped && input.GetButtonDown(VRButton.Primary) || !introSkipped && Input.GetMouseButtonDown(0)) //Checking every frame if button is being pressed
+    {
+        introSkipped = true;
+
+        StopCoroutine(DisplayTexts());
+        if (currentIndex == introTexts.Length - 1)
+        {
+            EndIntroSequence();
+            StopCoroutine(DisplayTexts());
+        }
+        else
+        {
+            currentIndex = (currentIndex + 1) % introTexts.Length;
+        }
+        StartCoroutine(DisplayTexts());
+
+        introSkipped = false;
+    }
+    */
+
+
+    /*
+    introImages[1].gameObject.SetActive(true);
+    introText.text = "Evening, astronaut. I know your day was draining and that you are preparing to rest. I'm conducting a final checkup to make sure you are comfortable.";
+    yield return new WaitForSeconds(7f);
+
+    introText.text = "You may notice various lights and sounds throughout the ship as it continues its operations. These are routine functions of our vessel, ensuring your safety and comfort";
+    yield return new WaitForSeconds(7f);
+
+    introText.text = "Should you require any assistance, press home for the menu. Now, please close your eyes for this experience and relax, knowing you are safe. Good night astronaut.";
+    yield return new WaitForSeconds(7f);
+    introImages[1].gameObject.SetActive(false);
     */
 }
